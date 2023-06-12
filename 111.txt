@@ -1,0 +1,3240 @@
+package edu.nh.admin;//已校对
+import java.io.*;
+import java.net.*;
+import java.awt.event.*;
+import javax.swing.*;
+public class addbook extends JPanel{
+	//声明文本框
+		private JTextField number,bookname,publish,author,isbn,price,stock;
+		//声明标签
+		private JLabel jnumber,jbookname,jpublish,jauthor,jisbn,jprice,jstock;
+		//声明按钮
+		private JButton button1,button2;
+		//声明数据流对象
+		PrintStream output;
+		DataInputStream input;
+		//声明字符串变量
+		String message="";
+		//构造方法
+		public addbook(){
+			//设置布局为null
+			this.setLayout(null);
+			jnumber=new JLabel("编号"); 
+			number=new JTextField();
+			jbookname=new JLabel("书名");
+			bookname=new JTextField();
+			jpublish=new JLabel("出版社");
+			publish=new JTextField();
+			jauthor=new JLabel("作者");
+			author=new JTextField();
+			jisbn=new JLabel("ISBN");
+			isbn=new JTextField();
+			jprice=new JLabel("价格");
+			price=new JTextField();
+			jstock=new JLabel("库存");
+			stock=new JTextField();
+			button1=new JButton("添加");
+			button2=new JButton("取消");
+			//设置标签的位置和大小
+			jnumber.setBounds(30,20,60,30);
+			jbookname.setBounds(30,70,60,26);
+			jpublish.setBounds(30,120,60,26);
+			jauthor.setBounds(30,170,60,26);
+			jisbn.setBounds(30,220,60,26);
+			jprice.setBounds(30,270,60,26);
+			jstock.setBounds(30,320,60,26);
+			//设置文本框的位置和大小
+			number.setBounds(110,20,120,26);
+			bookname.setBounds(110,70,120,26);
+			publish.setBounds(110,120,120,26);
+			author.setBounds(110,170,120,26);
+			isbn.setBounds(110,220,120,26);
+			price.setBounds(110,270,120,26);
+			stock.setBounds(110,320,120,26);
+			//设置按钮的位置和大小
+			button1.setBounds(30,370,60,26);
+			button2.setBounds(110,370,60,26);
+			//将标签、文本框和按扭添加到JPanel容器中
+			this.add(jnumber);
+			this.add(number);
+			this.add(jbookname);
+			this.add(bookname);
+			this.add(jpublish);
+			this.add(publish);
+			this.add(jauthor);
+			this.add(author);
+			this.add(jisbn);
+			this.add(isbn);
+			this.add(jprice);
+			this.add(price);
+			this.add(jstock);
+			this.add(stock);
+			this.add(button1);
+			this.add(button2);
+			//监听者对象注册给button1
+			button1.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e)
+				{if(number.getText().toString().equals(""))
+					JOptionPane.showMessageDialog(null, "编号不能为空！", "添加", JOptionPane.WARNING_MESSAGE);	
+				else
+					if(bookname.getText().toString().equals(""))
+						JOptionPane.showMessageDialog(null, "书名不能为空！", "添加", JOptionPane.WARNING_MESSAGE);	
+					else
+						if(publish.getText().toString().equals(""))
+							JOptionPane.showMessageDialog(null, "出版社不能为空!", "添加", JOptionPane.WARNING_MESSAGE);	
+						else
+							if(author.getText().toString().equals(""))
+								JOptionPane.showMessageDialog(null, "作者不能为空!", "添加", JOptionPane.WARNING_MESSAGE);	
+							else
+								if(isbn.getText().toString().equals(""))
+									JOptionPane.showMessageDialog(null, "ISBN不能为空!", "添加", JOptionPane.WARNING_MESSAGE);	
+								else
+									if(price.getText().toString().equals(""))
+										JOptionPane.showMessageDialog(null, "价格不能为空!", "添加", JOptionPane.WARNING_MESSAGE);	
+									else
+										if(stock.getText().toString().equals(""))
+											JOptionPane.showMessageDialog(null, "库存不能为空!", "添加", JOptionPane.WARNING_MESSAGE);	
+									    else
+										//调用方法connect()
+									    	connect("addbook"+"/"+number.getText().toString()+"/"+bookname.getText().toString()+"/"+publish.getText().toString()+"/"+author.getText().toString()+"/"+isbn.getText().toString()+"/"+price.getText().toString()+"/"+stock.getText().toString());
+
+				}
+			});
+			//监听者对象注册给button2
+			button2.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e)
+				{
+					number.setText("");
+					bookname.setText("");
+					publish.setText("");
+					author.setText("");
+					isbn.setText("");
+					price.setText("");
+					stock.setText("");
+				}
+			});
+			setSize(250,400);
+			this.setVisible(true);;
+		}
+		public void connect(String s){
+			Socket socket;
+			try{
+				//创建Socket类对象，指定端口号为4322
+				socket = new Socket(InetAddress.getByName(""), 1234);
+				//创建输出流对象
+				output=new PrintStream(new BufferedOutputStream(socket.getOutputStream()));
+				input=new DataInputStream(new BufferedInputStream(socket.getInputStream()));			
+				//输出数据流
+				output.println(s);
+				output.flush();	
+					try{
+						//读取输入流
+						message=(String)input.readLine();
+						if(message.equals("addok"))
+							//添加成功对话框
+							JOptionPane.showMessageDialog(null, "添加成功!");	
+						else
+							//添加失败对话框
+						    JOptionPane.showMessageDialog(null, "添加失败!");	
+					}
+					catch(IOException e){
+						//捕获异常
+						System.out.println("无法获得信息");
+					}
+				//关闭数据流和Socket对象
+					output.close();
+					input.close();
+					socket.close();
+			}
+			catch(EOFException eof){
+				//捕获异常
+				System.out.println("服务器中断");
+			}
+			catch(IOException e){
+				//捕获异常
+				e.printStackTrace();
+			}
+		}
+}
+
+
+package edu.nh.admin;//以校对
+import java.io.*;
+import java.net.*;
+import java.awt.event.*;
+import javax.swing.*;
+public class addusers extends JPanel{
+	//声明文本框
+		private JTextField number,name,college,subject,grade;
+		//声明标签
+		private JLabel jnumber,jname,jpassword,jcollege,jsubject,jgrade;
+		//声明密码框
+		private JPasswordField password;
+		//声明按钮
+		private JButton button1,button2;
+		//声明数据流对象
+		PrintStream output;
+		DataInputStream input;
+		//声明字符串变量
+		String message="";
+		public addusers(){
+			//设置布局为null
+			this.setLayout(null);
+			jnumber=new JLabel("学号"); 
+			number=new JTextField();
+			jname=new JLabel("姓名");
+			name=new JTextField();
+			jpassword=new JLabel("密码");
+			password=new JPasswordField();
+			jcollege=new JLabel("学院");
+			college=new JTextField();
+			jsubject=new JLabel("专业");
+			subject=new JTextField();
+			jgrade=new JLabel("年级");
+			grade=new JTextField();
+			button1=new JButton("添加");
+			button2=new JButton("取消");
+			//设置标签的位置和大小
+			jnumber.setBounds(30,20,60,30);
+			jname.setBounds(30,70,60,26);
+			jpassword.setBounds(30,120,60,26);
+			jcollege.setBounds(30,170,60,26);
+			jsubject.setBounds(30,220,60,26);
+			jgrade.setBounds(30,270,60,26);
+			//设置文本框的位置和大小
+			number.setBounds(110,20,120,26);
+			name.setBounds(110,70,120,26);
+			password.setBounds(110,120,120,26);
+			college.setBounds(110,170,120,26);
+			subject.setBounds(110,220,120,26);
+			grade.setBounds(110,270,120,26);
+			//设置按钮的位置和大小
+			button1.setBounds(30,320,60,26);
+			button2.setBounds(110,320,60,26);
+			//将标签、文本框和按扭添加到JPanel容器中
+			this.add(jnumber);
+			this.add(number);
+			this.add(jname);
+			this.add(name);
+			this.add(jpassword);
+			this.add(password);
+			this.add(jcollege);
+			this.add(college);
+			this.add(jsubject);
+			this.add(subject);
+			this.add(jgrade);
+			this.add(grade);
+			this.add(button1);
+			this.add(button2);
+			//监听者对象注册给button1
+			button1.addActionListener(new ActionListener() {
+			    public void actionPerformed(ActionEvent e) {
+			        if (number.getText().toString().equals(""))
+			            JOptionPane.showMessageDialog(null, "学号不能为空！", "添加", JOptionPane.WARNING_MESSAGE);
+			        else if (name.getText().toString().equals(""))
+			            JOptionPane.showMessageDialog(null, "姓名不能为空！", "添加", JOptionPane.WARNING_MESSAGE);
+			        else if (password.getText().toString().equals(""))
+			            JOptionPane.showMessageDialog(null, "密码不能为空！", "添加", JOptionPane.WARNING_MESSAGE);
+			        else if (college.getText().toString().equals(""))
+			            JOptionPane.showMessageDialog(null, "学院不能为空！", "添加", JOptionPane.WARNING_MESSAGE);
+			        else if (subject.getText().toString().equals(""))
+			            JOptionPane.showMessageDialog(null, "专业不能为空！", "添加", JOptionPane.WARNING_MESSAGE);
+			        else if (grade.getText().toString().equals(""))
+			            JOptionPane.showMessageDialog(null, "年级不能为空！", "添加", JOptionPane.WARNING_MESSAGE);
+			        else {
+			            // Call the connect method
+			            connect("add" + "/" + number.getText().toString() + "/" + name.getText().toString() + "/" +
+			                    password.getText().toString() + "/" + college.getText().toString() + "/" +
+			                    subject.getText().toString() + "/" + grade.getText().toString());
+			        }
+			    }
+			});
+
+			//监听者对象注册给button2
+			button2.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e)
+				{
+					number.setText("");
+					name.setText("");
+					password.setText("");
+					college.setText("");
+					subject.setText("");
+					grade.setText("");
+				}
+			});
+			setSize(250,400);
+			this.setVisible(true);;
+		}
+		public void connect(String s){
+			Socket socket;
+			try{
+				//创建Socket类对象，指定端口号为4321
+				socket = new Socket(InetAddress.getByName(""), 1234);
+				//创建输入、输出流对象
+				output=new PrintStream(new BufferedOutputStream(socket.getOutputStream()));
+				input=new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+				//输出数据流
+				output.println(s);
+				output.flush();
+					try{
+						//读取输入流
+						message=(String)input.readLine();
+						if(message.equals("addok"))
+							JOptionPane.showMessageDialog(null, "添加成功", "添加成功", JOptionPane.INFORMATION_MESSAGE);	
+						else
+							JOptionPane.showMessageDialog(null, "添加失败", "添加失败", JOptionPane.WARNING_MESSAGE);	
+					}
+					catch(IOException e){//捕获异常
+						System.out.println("无法获得信息");
+					}
+				//关闭输入输出数据流和Socket对象
+					output.close();
+					input.close();
+					socket.close();
+			}
+			catch(EOFException eof){//捕获异常
+				System.out.println("服务器中断");
+			}
+			catch(IOException e){//捕获异常
+				e.printStackTrace();
+			}
+		}
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		addusers app=new addusers();
+	}
+
+}
+
+
+package edu.nh.admin;//已校对
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+public class bookmain extends JFrame{
+	protected static final CardLayout cardlayout = null;
+	//声明面板容器和标签
+		private JPanel jp1=new JPanel();
+		private JLabel label1;
+	  BorderLayout borderLayout1 = new BorderLayout();
+	  //创建菜单栏
+	  JMenuBar jMenuBar1 = new JMenuBar();
+	  //创建菜单
+	  JMenu jMenu1 = new JMenu();
+	  JMenu jMenu2 = new JMenu();
+	  JMenu jMenu3 = new JMenu();
+	  JMenu jMenu4 = new JMenu();
+	  //创建菜单选项
+	  JMenuItem jMenuItem1 = new JMenuItem();
+	  JMenuItem jMenuItem2 = new JMenuItem();
+	  JMenuItem jMenuItem3 = new JMenuItem();
+	  JMenuItem jMenuItem4 = new JMenuItem();  
+	  JMenuItem jMenuItem5 = new JMenuItem();
+	  JMenuItem jMenuItem6 = new JMenuItem();  
+	  JMenuItem jMenuItem7 = new JMenuItem();
+	  JMenuItem jMenuItem8 = new JMenuItem();
+	  JMenuItem jMenuItem9 = new JMenuItem();
+	  JMenuItem jMenuItem10 = new JMenuItem();
+	  JMenuItem jMenuItem11 = new JMenuItem();
+	  JMenuItem jMenuItem12 = new JMenuItem();
+	  //方法
+	  public bookmain(){
+		  //设置窗口容器的布局管理器
+		  this.getContentPane().setLayout(borderLayout1);
+		  //设置字体格式
+		  this.setFont(new Font("宋体",Font.PLAIN,30));
+		  //设置窗口的大小和标题
+		  this.setSize(new Dimension(300, 200));
+		  this.setTitle("广东南华工商职业学院图书管理系统");
+		  label1=new JLabel("广东南华工商职业学院图书管理系统");
+		  //加入菜单栏
+		  this.setJMenuBar (jMenuBar1);
+		  //设置菜单和菜单项的名称
+	    	jMenu1.setText("用户管理");   	
+	    	jMenuItem1.setText("添加用户");
+	    	jMenuItem2.setText("修改用户");
+	    	jMenuItem3.setText("删除用户");
+	    	jMenuItem4.setText("查询用户");
+	    	jMenu2.setText("借阅管理"); 
+	    	jMenuItem5.setText("借阅图书");
+	    	jMenuItem6.setText("归还图书");
+	    	jMenuItem7.setText("借阅查询");
+	    	jMenu3.setText("图书管理");
+	    	jMenuItem8.setText("添加图书");
+	    	jMenuItem9.setText("修改图书");
+	    	jMenuItem10.setText("删除图书");
+	    	jMenuItem11.setText("查询图书");
+	    	jMenuItem12.setText("退出系统");
+	    	jMenu4.setText("退出");
+	    	//菜单栏里的菜单
+			jMenuBar1.add(jMenu1);
+	    	jMenuBar1.add(jMenu2);
+	    	jMenuBar1.add(jMenu3);
+	    	jMenuBar1.add(jMenu4);
+	    	//文件菜单里的菜单项
+	    	jMenu1.add(jMenuItem1);
+	   		jMenu1.add(jMenuItem2);
+	    	jMenu1.add(jMenuItem3);
+	    	jMenu1.add(jMenuItem4);
+	   		jMenu2.add(jMenuItem5);
+	    	jMenu2.add(jMenuItem6);
+	    	jMenu2.add(jMenuItem7);
+	   		jMenu3.add(jMenuItem8);
+	    	jMenu3.add(jMenuItem9);
+	    	jMenu3.add(jMenuItem10);
+	    	jMenu3.add(jMenuItem11);
+	    	jMenu4.add(jMenuItem12);
+	    	//监听者对象注册给jMenuItem1
+	    	jMenuItem1.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e)
+				{
+					//将添加用户管理面板添加到jp1中，并显示出来
+					addusers addusers1=new addusers();
+					jp1.add(addusers1, "添加用户信息");
+					CardLayout c1=(CardLayout)jp1.getLayout();
+					c1.show(jp1, "添加用户信息");
+
+				}
+			});
+	    	//监听者对象注册给jMenuItem2
+	    	jMenuItem2.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e)
+				{
+					//将修改用户管理面板添加到jp1中，并显示出来
+					updateusers updateusers1=new updateusers();
+					jp1.add(updateusers1, "修改用户信息");
+					CardLayout c1=(CardLayout)jp1.getLayout();
+					c1.show(jp1, "修改用户信息");
+				}
+			});
+	    	//监听者对象注册给jMenuItem3
+	    	jMenuItem3.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e)
+				{
+					//将删除用户管理面板添加到jp1中，并显示出来
+					delusers delusers1=new delusers();
+					jp1.add(delusers1, "删除用户信息");
+					CardLayout c1=(CardLayout)jp1.getLayout();
+					c1.show(jp1, "删除用户信息");
+				}
+			});
+	    	//监听者对象注册给jMenuItem4
+	    	jMenuItem4.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e)
+				{
+					//将查询用户管理面板添加到jp1中，并显示出来
+					searchuser searchuser1=new searchuser();
+					jp1.add(searchuser1, "查询用户信息");
+					CardLayout c1=(CardLayout)jp1.getLayout();
+					c1.show(jp1, "查询用户信息");
+				}
+			});
+	    	//监听者对象注册给jMenuItem5
+	    	jMenuItem5.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e)
+				{
+					//将借阅图书管理面板添加到jp1中，并显示出来
+					lendbook lendbook1=new lendbook();
+					jp1.add(lendbook1, "借阅图书信息");
+					CardLayout c1=(CardLayout)jp1.getLayout();
+					c1.show(jp1, "借阅图书信息");
+				}
+			});
+	    	//监听者对象注册给jMenuItem6
+	    	jMenuItem6.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e)
+				{
+					//将归还图书管理面板添加到jp1中，并显示出来
+					returnbook returnbook1=new returnbook();
+					jp1.add(returnbook1, "归还图书信息");
+					CardLayout c1=(CardLayout)jp1.getLayout();
+					c1.show(jp1, "归还图书信息");
+				}
+			});
+	    	//监听者对象注册给jMenuItem7
+	    	jMenuItem7.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e)
+				{
+					//将借阅查询管理面板添加到jp1中，并显示出来
+					searchlend searchlend1=new searchlend();
+					jp1.add(searchlend1, "借阅查询信息");
+					CardLayout c1=(CardLayout)jp1.getLayout();
+					c1.show(jp1, "借阅查询信息");
+				}
+			});
+	    	//监听者对象注册给jMenuItem8
+	    	jMenuItem8.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e)
+				{
+					//将添加图书管理面板添加到jp1中，并显示出来
+					addbook addbook1=new addbook();
+					jp1.add(addbook1, "添加图书信息");
+					CardLayout c1=(CardLayout)jp1.getLayout();
+					c1.show(jp1, "添加图书信息");
+				}
+			});
+	    	//监听者对象注册给jMenuItem9
+	    	jMenuItem9.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e)
+				{
+					//将修改图书管理面板添加到jp1中，并显示出来
+					updatebook updatebook1=new updatebook();
+					jp1.add(updatebook1, "修改图书信息");
+					CardLayout c1=(CardLayout)jp1.getLayout();
+					c1.show(jp1, "修改图书信息");
+				}
+			});
+	    	//监听者对象注册给jMenuItem10
+	    	jMenuItem10.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e)
+				{
+					//将删除图书管理面板添加到jp1中，并显示出来
+					delbook delbook1=new delbook();
+					jp1.add(delbook1, "删除图书信息");
+					CardLayout c1=(CardLayout)jp1.getLayout();
+					c1.show(jp1, "删除图书信息");
+				}
+			});
+	    	//监听者对象注册给jMenuItem11
+	    	jMenuItem11.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e)
+				{
+					//将查询图书管理面板添加到jp1中，并显示出来
+					searchbook searchbook1=new searchbook();
+					jp1.add(searchbook1, "修改用户信息");
+					CardLayout c1=(CardLayout)jp1.getLayout();
+					c1.show(jp1, "修改用户信息");
+				}
+			});
+	    	jMenuItem12.addActionListener(new java.awt.event.ActionListener(){
+	      	public void actionPerformed(ActionEvent e) {
+	      		System.exit(0);
+	      }
+	    });
+	    	   	
+	    	//设置JPanel的布局管理器
+			CardLayout cardlayout=new CardLayout();
+			jp1.setLayout(cardlayout);
+			jp1.add(label1,"图书管理系统");
+			this.add(jp1,BorderLayout.CENTER);
+			setSize(300,450);
+	   		this.setVisible(true);
+	  	}
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		bookmain ex=new bookmain ();
+	}
+
+}
+
+
+package edu.nh.admin;//已校对
+import java.io.*;
+import java.net.*;
+import java.awt.event.*;
+import javax.swing.*;
+public class delbook extends JPanel{
+	//声明标签、文本框和按钮
+		private JTextField number,bookname,publish,author,isbn,price;
+		private JLabel jnumber,jbookname,jpublish,jauthor,jisbn,jprice;
+		private JButton button1,button2;
+		//声明数据流对象
+		PrintStream output;
+		DataInputStream input;
+		//声明字符和字符串变量
+		String message="";
+		String bookinfor[];
+		//构造方法
+		public delbook(){
+			//设置布局为null
+			this.setLayout(null);
+			jnumber=new JLabel("编号"); 
+			number=new JTextField();
+			jbookname=new JLabel("书名");
+			bookname=new JTextField();
+			jpublish=new JLabel("出版社");
+			publish=new JTextField();
+			jauthor=new JLabel("作者");
+			author=new JTextField();
+			jisbn=new JLabel("ISBN");
+			isbn=new JTextField();
+			jprice=new JLabel("价格");
+			price=new JTextField();
+			button1=new JButton("查询");
+			button2=new JButton("删除");
+			//设置标签\文本框和按钮的大小和位置
+			jnumber.setBounds(30,20,60,26);
+			jbookname.setBounds(30,100,60,26);
+			jpublish.setBounds(30,130,60,26);
+			jauthor.setBounds(30,160,60,26);
+			jisbn.setBounds(30,190,60,26);
+			jprice.setBounds(30,220,60,26);
+			number.setBounds(110,20,120,26);
+			bookname.setBounds(110,100,120,26);
+			publish.setBounds(110,130,120,26);
+			author.setBounds(110,160,120,26);
+			isbn.setBounds(110,190,120,26);
+			price.setBounds(110,220,120,26);
+			button1.setBounds(60, 60, 60, 30);
+			button2.setBounds(60,250,60,26);
+			//设置文本框的属性为不可编辑
+			bookname.setEnabled(false);
+			publish.setEnabled(false);
+			author.setEnabled(false);
+			isbn.setEnabled(false);
+			price.setEnabled(false);
+			//将标签与按扭添加到JPanel容器中
+			this.add(jnumber);
+			this.add(number);
+			this.add(button1);
+			this.add(jbookname);
+			this.add(bookname);
+			this.add(jpublish);
+			this.add(publish);
+			this.add(jauthor);
+			this.add(author);
+			this.add(jisbn);
+			this.add(isbn);
+			this.add(jprice);
+			this.add(price);
+			this.add(button2);
+			//监听者对象注册给button1
+			button1.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e)
+				{if(number.getText().toString().equals(""))
+					//如果编号为空，弹出提示消息对话框
+					JOptionPane.showMessageDialog(null, "编号不能为空！", "删除", JOptionPane.WARNING_MESSAGE);	
+				else
+					//调用方法connect()
+					connect("delbook"+"/"+number.getText().toString());
+				}
+			});
+			//监听者对象注册给button2
+			button2.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e)
+				{if(number.getText().toString().equals(""))
+					JOptionPane.showMessageDialog(null, "编号不能为空！", "删除", JOptionPane.WARNING_MESSAGE);	
+				else
+					if(bookname.getText().toString().equals(""))
+						JOptionPane.showMessageDialog(null, "书名不能为空！", "删除", JOptionPane.WARNING_MESSAGE);	
+					else
+						if(publish.getText().toString().equals(""))
+							JOptionPane.showMessageDialog(null, "出版社不能为空！", "删除", JOptionPane.WARNING_MESSAGE);	
+						else
+							if(author.getText().toString().equals(""))
+								JOptionPane.showMessageDialog(null, "作者不能为空！", "删除", JOptionPane.WARNING_MESSAGE);	
+							else
+								if(isbn.getText().toString().equals(""))
+									JOptionPane.showMessageDialog(null, "ISBN不能为空！", "删除", JOptionPane.WARNING_MESSAGE);	
+								else
+									if(price.getText().toString().equals(""))
+										JOptionPane.showMessageDialog(null, "价格不能为空！", "删除", JOptionPane.WARNING_MESSAGE);	
+									else
+										//调用方法connect()
+										connect("del"+"/"+number.getText().toString());
+				}
+			});
+			setSize(250,380);
+			this.setVisible(true);;
+		}
+		//定义方法用于输入和输出数据流
+		public void connect(String s){
+			Socket socket;
+			try{
+				//创建Socket类对象，指定端口号为4322
+				socket = new Socket(InetAddress.getByName(""), 1234);
+				//创建输入输出流对象
+				output=new PrintStream(new BufferedOutputStream(socket.getOutputStream()));
+				input=new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+				//输出数据流
+				output.println(s);
+				output.flush();
+					try{
+						//读取来自服务器端的数据
+						message = (String)input.readLine();
+						//如果返回值为delok，弹出对话框删除成功
+						if(message.equals("delok"))
+						{
+							number.setEnabled(true);
+							bookname.setText("");
+							publish.setText("");
+							author.setText("");
+							isbn.setText("");
+							price.setText("");
+							JOptionPane.showMessageDialog(null, "删除成功！", "删除成功", JOptionPane.INFORMATION_MESSAGE);	
+						}
+						//如果返回值为no，弹出对话框无记录信息
+						else if(message.equals("no"))
+						{
+							number.setEnabled(true);
+							bookname.setText("");
+							bookname.setText("");
+							publish.setText("");
+							author.setText("");
+							isbn.setText("");
+							price.setText("");
+							JOptionPane.showMessageDialog(null, "无记录信息！", "无记录信息", JOptionPane.INFORMATION_MESSAGE);	
+						}
+						//否则，根据返回的数据修改文本框中的值
+						else
+						{
+							//将从数据库端传输过来的字符串分割成数组，并显示到对应的文本框中
+							bookinfor=message.split("/");
+							number.setEnabled(false);
+							bookname.setText(bookinfor[2]);
+							publish.setText(bookinfor[3]);
+							author.setText(bookinfor[4]);
+							isbn.setText(bookinfor[5]);
+							price.setText(bookinfor[6]);
+							bookname.setEnabled(true);
+							publish.setEnabled(true);
+							author.setEnabled(true);
+							isbn.setEnabled(true);
+							price.setEnabled(true);
+						}
+					}
+					catch(IOException e){
+						//捕获异常
+						System.out.println("\n无法获得信息");
+					}
+				//关闭输入输出流对象和Socket对象
+					output.close();
+					input.close();
+					socket.close();
+			}
+			catch(EOFException eof){
+				//捕获异常
+				System.out.println("服务器中断");
+			}
+			catch(IOException e){
+				//捕获异常
+				e.printStackTrace();
+			}
+		}
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		delbook app1=new delbook();
+	}
+
+}
+
+
+package edu.nh.admin;//已校对
+import java.io.*;
+import java.net.*;
+import java.awt.event.*;
+import javax.swing.*;
+public class delbook extends JPanel{
+	//声明标签、文本框和按钮
+		private JTextField number,bookname,publish,author,isbn,price;
+		private JLabel jnumber,jbookname,jpublish,jauthor,jisbn,jprice;
+		private JButton button1,button2;
+		//声明数据流对象
+		PrintStream output;
+		DataInputStream input;
+		//声明字符和字符串变量
+		String message="";
+		String bookinfor[];
+		//构造方法
+		public delbook(){
+			//设置布局为null
+			this.setLayout(null);
+			jnumber=new JLabel("编号"); 
+			number=new JTextField();
+			jbookname=new JLabel("书名");
+			bookname=new JTextField();
+			jpublish=new JLabel("出版社");
+			publish=new JTextField();
+			jauthor=new JLabel("作者");
+			author=new JTextField();
+			jisbn=new JLabel("ISBN");
+			isbn=new JTextField();
+			jprice=new JLabel("价格");
+			price=new JTextField();
+			button1=new JButton("查询");
+			button2=new JButton("删除");
+			//设置标签\文本框和按钮的大小和位置
+			jnumber.setBounds(30,20,60,26);
+			jbookname.setBounds(30,100,60,26);
+			jpublish.setBounds(30,130,60,26);
+			jauthor.setBounds(30,160,60,26);
+			jisbn.setBounds(30,190,60,26);
+			jprice.setBounds(30,220,60,26);
+			number.setBounds(110,20,120,26);
+			bookname.setBounds(110,100,120,26);
+			publish.setBounds(110,130,120,26);
+			author.setBounds(110,160,120,26);
+			isbn.setBounds(110,190,120,26);
+			price.setBounds(110,220,120,26);
+			button1.setBounds(60, 60, 60, 30);
+			button2.setBounds(60,250,60,26);
+			//设置文本框的属性为不可编辑
+			bookname.setEnabled(false);
+			publish.setEnabled(false);
+			author.setEnabled(false);
+			isbn.setEnabled(false);
+			price.setEnabled(false);
+			//将标签与按扭添加到JPanel容器中
+			this.add(jnumber);
+			this.add(number);
+			this.add(button1);
+			this.add(jbookname);
+			this.add(bookname);
+			this.add(jpublish);
+			this.add(publish);
+			this.add(jauthor);
+			this.add(author);
+			this.add(jisbn);
+			this.add(isbn);
+			this.add(jprice);
+			this.add(price);
+			this.add(button2);
+			//监听者对象注册给button1
+			button1.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e)
+				{if(number.getText().toString().equals(""))
+					//如果编号为空，弹出提示消息对话框
+					JOptionPane.showMessageDialog(null, "编号不能为空！", "删除", JOptionPane.WARNING_MESSAGE);	
+				else
+					//调用方法connect()
+					connect("delbook"+"/"+number.getText().toString());
+				}
+			});
+			//监听者对象注册给button2
+			button2.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e)
+				{if(number.getText().toString().equals(""))
+					JOptionPane.showMessageDialog(null, "编号不能为空！", "删除", JOptionPane.WARNING_MESSAGE);	
+				else
+					if(bookname.getText().toString().equals(""))
+						JOptionPane.showMessageDialog(null, "书名不能为空！", "删除", JOptionPane.WARNING_MESSAGE);	
+					else
+						if(publish.getText().toString().equals(""))
+							JOptionPane.showMessageDialog(null, "出版社不能为空！", "删除", JOptionPane.WARNING_MESSAGE);	
+						else
+							if(author.getText().toString().equals(""))
+								JOptionPane.showMessageDialog(null, "作者不能为空！", "删除", JOptionPane.WARNING_MESSAGE);	
+							else
+								if(isbn.getText().toString().equals(""))
+									JOptionPane.showMessageDialog(null, "ISBN不能为空！", "删除", JOptionPane.WARNING_MESSAGE);	
+								else
+									if(price.getText().toString().equals(""))
+										JOptionPane.showMessageDialog(null, "价格不能为空！", "删除", JOptionPane.WARNING_MESSAGE);	
+									else
+										//调用方法connect()
+										connect("del"+"/"+number.getText().toString());
+				}
+			});
+			setSize(250,380);
+			this.setVisible(true);;
+		}
+		//定义方法用于输入和输出数据流
+		public void connect(String s){
+			Socket socket;
+			try{
+				//创建Socket类对象，指定端口号为4322
+				socket = new Socket(InetAddress.getByName(""), 1234);
+				//创建输入输出流对象
+				output=new PrintStream(new BufferedOutputStream(socket.getOutputStream()));
+				input=new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+				//输出数据流
+				output.println(s);
+				output.flush();
+					try{
+						//读取来自服务器端的数据
+						message = (String)input.readLine();
+						//如果返回值为delok，弹出对话框删除成功
+						if(message.equals("delok"))
+						{
+							number.setEnabled(true);
+							bookname.setText("");
+							publish.setText("");
+							author.setText("");
+							isbn.setText("");
+							price.setText("");
+							JOptionPane.showMessageDialog(null, "删除成功！", "删除成功", JOptionPane.INFORMATION_MESSAGE);	
+						}
+						//如果返回值为no，弹出对话框无记录信息
+						else if(message.equals("no"))
+						{
+							number.setEnabled(true);
+							bookname.setText("");
+							bookname.setText("");
+							publish.setText("");
+							author.setText("");
+							isbn.setText("");
+							price.setText("");
+							JOptionPane.showMessageDialog(null, "无记录信息！", "无记录信息", JOptionPane.INFORMATION_MESSAGE);	
+						}
+						//否则，根据返回的数据修改文本框中的值
+						else
+						{
+							//将从数据库端传输过来的字符串分割成数组，并显示到对应的文本框中
+							bookinfor=message.split("/");
+							number.setEnabled(false);
+							bookname.setText(bookinfor[2]);
+							publish.setText(bookinfor[3]);
+							author.setText(bookinfor[4]);
+							isbn.setText(bookinfor[5]);
+							price.setText(bookinfor[6]);
+							bookname.setEnabled(true);
+							publish.setEnabled(true);
+							author.setEnabled(true);
+							isbn.setEnabled(true);
+							price.setEnabled(true);
+						}
+					}
+					catch(IOException e){
+						//捕获异常
+						System.out.println("\n无法获得信息");
+					}
+				//关闭输入输出流对象和Socket对象
+					output.close();
+					input.close();
+					socket.close();
+			}
+			catch(EOFException eof){
+				//捕获异常
+				System.out.println("服务器中断");
+			}
+			catch(IOException e){
+				//捕获异常
+				e.printStackTrace();
+			}
+		}
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		delbook app1=new delbook();
+	}
+
+}
+
+
+package edu.nh.admin;
+import java.io.*;
+import java.net.*;
+import java.awt.event.*;
+import javax.swing.*;
+public class lendbook extends JPanel{
+	//声明标签
+		private JTextField bnumber,unumber;
+		//声明文本框
+		private JLabel jbnumber,junumber;
+		//声明按钮
+		private JButton button1,button2;
+		//声明数据流对象
+		PrintStream output;
+		DataInputStream input;
+		//声明字符串变量
+		String message="";
+		public lendbook(){
+			//设置布局为null
+			this.setLayout(null);
+			jbnumber=new JLabel("图书编号"); 
+			bnumber=new JTextField();
+			junumber=new JLabel("读者编号");
+			unumber=new JTextField();
+			button1=new JButton("借阅");
+			button2=new JButton("取消");
+			//设置标签的位置和大小
+			jbnumber.setBounds(30,20,60,30);
+			junumber.setBounds(30,70,60,26);
+			//设置文本框的位置和大小
+			bnumber.setBounds(110,20,120,26);
+			unumber.setBounds(110,70,120,26);
+			//设置按钮的位置和大小
+			button1.setBounds(30,120,60,26);
+			button2.setBounds(110,120,60,26);
+			//将标签、文本框和按扭添加到JPanel容器中
+			this.add(jbnumber);
+			this.add(bnumber);
+			this.add(junumber);
+			this.add(unumber);
+			this.add(button1);
+			this.add(button2);
+			//监听者对象注册给button1
+			button1.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e)
+				{if(bnumber.getText().toString().equals(""))
+					JOptionPane.showMessageDialog(null, "图书编号不能为空!");	
+				else
+					if(unumber.getText().toString().equals(""))
+						JOptionPane.showMessageDialog(null, "读者编号不能为空!");	
+					else
+						//调用方法connect
+						connect("lend"+"/"+bnumber.getText().toString()+"/"+unumber.getText().toString());
+				}
+			});
+			//监听者对象注册给button2
+			button2.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e)
+				{
+					bnumber.setText("");
+					unumber.setText("");
+				}
+			});
+			setSize(250,300);
+			this.setVisible(true);;
+		}
+		public void connect(String s){
+			Socket socket;
+			try{
+				//创建Socket类对象，指定端口号为4323
+				socket = new Socket(InetAddress.getByName(""), 1234);
+				//创建输入、输出流对象
+				output=new PrintStream(new BufferedOutputStream(socket.getOutputStream()));
+				input=new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+				//输出数据流
+				output.println(s);
+				output.flush();
+				try{
+					//读取输入流
+					message = input.readLine();					
+					if(message.equals("lendok")){
+						//借阅成功对话框
+						JOptionPane.showMessageDialog(null, "借阅成功！");} 
+					else if(message.equals("lendno")){
+						//借阅失败对话框
+						JOptionPane.showMessageDialog(null, "借阅失败！");} 
+					else if(message.equals("nobook")){
+						//借阅失败对话框
+						JOptionPane.showMessageDialog(null, "此书不存在或被借完！");} 
+					else if(message.equals("nouser")){
+						//借阅失败对话框
+						JOptionPane.showMessageDialog(null, "此读者不存在！");} 
+					else if(message.equals("noreturn")){
+						//借阅失败对话框
+						JOptionPane.showMessageDialog(null, "您以借此书未还！");} 
+				}
+					catch(IOException e){//捕获异常
+						System.out.println("无法获得信息");
+					}
+				//关闭输入输出流对象和Socket对象
+					input.close();
+					output.close();
+					socket.close();
+			}
+			catch(EOFException eof){
+				//捕获异常
+				System.out.println("服务器中断");
+			}
+			catch(IOException e){
+				//捕获异常
+				e.printStackTrace();
+			}
+		}
+}
+
+
+package edu.nh.admin;
+import java.io.*;
+import java.net.*;
+import java.awt.event.*;
+import javax.swing.*;
+public class returnbook extends JPanel{
+	//声明标签
+		private JTextField bnumber,unumber;
+		//声明文本框
+		private JLabel jbnumber;
+		//声明按钮
+		private JButton button1,button2;
+		//声明数据流对象
+		PrintStream output;
+		DataInputStream input;
+		//声明字符串变量
+		String message="";
+		public returnbook(){
+			//设置布局为null
+			this.setLayout(null);
+			jbnumber=new JLabel("图书编号"); 
+			bnumber=new JTextField();
+			jbnumber=new JLabel("管理员编号"); 
+			unumber=new JTextField();
+			button1=new JButton("归还");
+			button2=new JButton("取消");
+			//设置标签的位置和大小
+			jbnumber.setBounds(30,20,60,30);
+			//设置文本框的位置和大小
+			bnumber.setBounds(110,20,120,26);
+			//设置按钮的位置和大小
+			button1.setBounds(30,80,60,26);
+			button2.setBounds(110,80,60,26);
+			//将标签、文本框和按扭添加到JPanel容器中
+			this.add(jbnumber);
+			this.add(bnumber);
+			this.add(jbnumber);
+			this.add(unumber);
+			this.add(button1);
+			this.add(button2);
+			//监听者对象注册给button1
+			button1.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e)
+				{if(bnumber.getText().toString().equals(""))
+					JOptionPane.showMessageDialog(null, "图书编号不能为空!");	
+				else
+					//调用方法connect
+					connect("return"+"/"+bnumber.getText().toString()+"/"+unumber.getText().toString());
+				}
+			});
+			//监听者对象注册给button2
+			button2.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e)
+				{
+					bnumber.setText("");
+                    unumber.setText("");
+				}
+			});
+			setSize(250,300);
+			this.setVisible(true);;
+		}
+		public void connect(String s){
+			Socket socket;
+			try{
+				//创建Socket类对象，指定端口号为4323
+				socket = new Socket(InetAddress.getByName(""), 1234);
+				//输入输出流对象
+				output=new PrintStream(new BufferedOutputStream(socket.getOutputStream()));
+			    input=new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+				//输出数据流
+				output.println(s);
+			output.flush();
+					try{
+						//读取输入流
+						message =(String) input.readLine();					
+				if(message.equals("returnok")){
+					//归还成功对话框
+					JOptionPane.showMessageDialog(null, "归还成功！");} 
+				else if(message.equals("nolendbook")){
+					//归还失败对话框
+                    JOptionPane.showMessageDialog(null, "此书信息不存在或已归还！");} 
+					}
+					catch(IOException e){//捕获异常
+						System.out.println("无法获得信息");
+					}
+				//关闭输入输出流对象和Socket对象
+				input.close();
+				output.close();
+				socket.close();
+			}
+			catch(EOFException eof){
+				//捕获异常
+				System.out.println("服务器中断");
+			}
+			catch(IOException e){
+				//捕获异常
+				e.printStackTrace();
+			}
+		}
+}
+
+
+package edu.nh.admin;//已校对
+import java.awt.*;
+import java.awt.event.*;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.Socket;
+import javax.swing.*;
+import java.util.*;
+public class searchbook extends JPanel implements ActionListener{
+	//声明文本框、标签、下拉菜单和按钮
+		private JTextField searchfield;
+		private JLabel searchlabel;
+		private JComboBox searchcbo;
+		private JButton button1;
+		//声明Vector变量
+		Vector vector1=new Vector();
+		Vector vector2=new Vector();
+		//声明滚动面板
+		JScrollPane jspane;
+		private JPanel jp=new JPanel();
+		//声明表格
+		JTable table;
+		//声明数据流对象
+		PrintWriter output;
+		BufferedReader input;
+		//声明字符串变量
+		String message="";
+		//构造方法
+		public searchbook(){
+			searchlabel=new JLabel("图书信息查询");
+			searchfield=new JTextField("请输入查询条件");
+			searchcbo=new JComboBox();
+			button1=new JButton("查询");
+			searchcbo.addItem("按编号查询");
+			searchcbo.addItem("按书名查询");
+			//设置JPanel的布局管理器
+			jp.setLayout(new FlowLayout());
+			//将标签与按扭添加到JPanel容器中
+			jp.add(searchlabel);
+			jp.add(searchfield);
+			jp.add(button1);
+			jp.add(searchcbo);
+			jp.add(button1);
+			//设置布局管理器
+			this.setLayout(new BorderLayout());
+			//将jp添加到面板
+			this.add(jp,BorderLayout.NORTH);
+			//在vector2中添加元素
+			vector2.add("编号");
+			vector2.add("书名");
+			vector2.add("出版社");
+			vector2.add("作者");
+			vector2.add("ISBN");
+			vector2.add("定价");
+			vector2.add("库存");
+			//button1注册监听者对象
+			button1.addActionListener(this);
+			this.setSize(500,500);
+		}
+		//处理监听到的事件
+		public void actionPerformed(ActionEvent e)
+		{
+			String numorname,searchf,sql;
+			//获得查询条件
+			numorname=searchcbo.getSelectedItem().toString();
+			searchf=searchfield.getText().trim();
+			{if(searchf.equals(""))
+				JOptionPane.showMessageDialog(null, "查询条件不能为空!", "查询", JOptionPane.WARNING_MESSAGE);	
+			else
+				if(numorname.equals(""))
+					JOptionPane.showMessageDialog(null, "查询条件不能为空!", "查询", JOptionPane.WARNING_MESSAGE);	
+				else
+					//调用方法connect
+					connect("searchbook"+"/"+searchf+"/"+numorname);
+			}
+		}
+		public void connect(String s){
+			Socket socket;
+			try{
+				//创建Socket类对象，指定端口号为4322
+				socket = new Socket(InetAddress.getByName(""), 1234);
+			//创建输入、输出流对象
+			output=new PrintWriter(new BufferedOutputStream(socket.getOutputStream()));
+			input=new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			//输出数据流
+			output.println(s);
+			output.flush();	
+					try{
+						//读取输入流
+						while((message = input.readLine()).equals("end")){
+							String bookinfor[];
+							//将从数据库端传输过来的字符串分割成数组
+							bookinfor=message.split("/");
+							Vector vector3=new Vector();
+							//将数组元素的值添加到vector3
+							vector3.add(bookinfor[1]);
+                            vector3.add(bookinfor[2]);
+                            vector3.add(bookinfor[3]);
+                            vector3.add(bookinfor[4]);
+                            vector3.add(bookinfor[5]);
+                            vector3.add(bookinfor[6]);
+                            vector3.add(bookinfor[7]);
+							//把vector3作为数据元素添加到vector1中
+							vector1.add( vector3);
+						}
+						//创建表格
+						table=new JTable(vector1,vector2);
+						//创建滚动面板
+						jspane=new JScrollPane(table);
+						//将滚动面板添加 到窗口
+						this.add(jspane,BorderLayout.CENTER);
+					}
+					catch(IOException e){
+						//捕获异常
+						System.out.println("无法获得信息");
+					}
+				//关闭输入输出数据流和Socket对象
+				input.close();
+			output.close();
+			socket.close();
+			}
+			catch(EOFException eof){//捕获异常
+				System.out.println("服务器中断");
+			}
+			catch(IOException e){//捕获异常
+				e.printStackTrace();
+			}
+		}
+}
+
+
+package edu.nh.admin;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.Socket;
+import javax.swing.*;
+import java.util.*;
+
+public class searchlend extends JPanel implements ActionListener{
+    //声明文本框、标签、下拉菜单和按钮
+    private JTextField searchfield;
+    private JLabel searchlabel;
+    private JComboBox searchcbo;
+    private JButton button1;
+    //声明Vector变量
+    Vector<Vector<String>> vector1 = new Vector<Vector<String>>();
+    Vector<String> vector2 = new Vector<String>();
+    //声明滚动面板
+    JScrollPane jspane;
+    private JPanel jp = new JPanel();
+    //声明表格
+    JTable table;
+    //声明数据流对象
+    PrintWriter output;
+    BufferedReader input;
+    //声明字符串变量
+    String message = "";
+
+    //方法
+    public searchlend() {
+        searchlabel = new JLabel("图书借阅查询");
+        searchfield = new JTextField("请输入查询条件");
+        searchcbo = new JComboBox();
+        button1 = new JButton("查询");
+        searchcbo.addItem("按图书查询");
+        searchcbo.addItem("按读者查询");
+        //设置JPanel的布局管理器
+        jp.setLayout(new FlowLayout());
+        //将标签与按钮添加到JPanel容器中
+        jp.add(searchlabel);
+        jp.add(searchfield);
+        jp.add(button1);
+        jp.add(searchcbo);
+        jp.add(button1);
+        //设置布局管理器
+        this.setLayout(new BorderLayout());
+        //将jp添加到面板
+        this.add(jp, BorderLayout.NORTH);
+        //在vector2中添加元素
+        vector2.add("图书");
+        vector2.add("读者");
+        vector2.add("借出时间");
+        vector2.add("应还时间");
+        vector2.add("归还时间");
+        vector2.add("是否归还");
+        //监听者对象注册给button1
+        button1.addActionListener(this);
+        this.setSize(500, 500);
+    }
+
+    //处理监听到的事件
+    public void actionPerformed(ActionEvent e) {
+        String numorname, searchf;
+        //获得查询条件
+        numorname = searchcbo.getSelectedItem().toString();
+        searchf = searchfield.getText().trim();
+        if (searchf.equals("")) {
+            JOptionPane.showMessageDialog(null, "查询条件不能为空!", "查询", JOptionPane.WARNING_MESSAGE);
+        } else if (numorname.equals("")) {
+            JOptionPane.showMessageDialog(null, "查询条件不能为空!", "查询", JOptionPane.WARNING_MESSAGE);
+        } else {
+            //调用方法connect
+        	connect("search"+"/"+searchf+"/"+searchf+"/"+numorname);
+        }
+    }
+
+    public void connect(String s) {
+        Socket socket;
+        try {
+            //创建Socket类对象，指定端口号为4323
+        	socket = new Socket(InetAddress.getByName(""), 1234);
+            //创建输出流对象
+        	output=new PrintWriter(new BufferedOutputStream(socket.getOutputStream()));
+		    input=new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            //输出数据流
+            output.println(searchcbo.getSelectedItem().toString() + "/" + searchfield.getText().trim());
+            try {
+                //读取输入流
+                while ((message = input.readLine()) != null) {
+                    String booklendinfor[] = message.split("/");
+                    Vector<String> vector3 = new Vector<String>();
+                    //将从数据库端传输过来的字符串分割成数组
+                    //将数组元素的值添加到vector3
+                    for (String info : booklendinfor) {
+                        vector3.add(info);
+                    }
+                    //把vector3作为数据元素添加到vector1中
+                    vector1.add(vector3);
+                }
+                //创建表格
+                table = new JTable(vector1, vector2);
+                //创建滚动面板
+                jspane = new JScrollPane(table);
+                //将滚动面板添加到窗口
+                this.add(jspane, BorderLayout.CENTER);
+            } catch (IOException e) {
+                //捕获异常
+                System.out.println("无法获得信息");
+            }
+            //关闭输入输出数据流和Socket对象
+            input.close();
+            output.close();
+            socket.close();
+        } catch (EOFException eof) {//捕获异常
+            System.out.println("服务器中断");
+        } catch (IOException e) {//捕获异常
+            e.printStackTrace();
+        }
+    }
+}
+
+
+package edu.nh.admin;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.Socket;
+import javax.swing.*;
+import java.util.*;
+public class searchuser extends JPanel implements ActionListener{
+	//声明文本框、标签、下拉菜单和按钮
+		private JTextField searchfield;
+		private JLabel searchlabel;
+		private JComboBox searchcbo;
+		private JButton button1;
+		//声明Vector变量
+		Vector vector1=new Vector();
+		Vector vector2=new Vector();
+		//声明滚动面板
+		JScrollPane jspane;
+		private JPanel jp=new JPanel();
+		//声明表格
+		JTable table;
+		//声明数据流对象
+		PrintWriter output;
+		BufferedReader input;
+		//声明字符串变量
+		String message="";
+		//构造方法
+		public searchuser(){
+			searchlabel=new JLabel("读者信息查询");
+			searchfield=new JTextField("请输入查询条件");
+			searchcbo=new JComboBox();
+			button1=new JButton("查询");
+			searchcbo.addItem("按学号查询");
+			searchcbo.addItem("按姓名 查询");
+			//设置JPanel的布局管理器
+			jp.setLayout(new FlowLayout());
+			//将标签与按扭添加到JPanel容器中
+			jp.add(searchlabel);
+			jp.add(searchfield);
+			jp.add(button1);
+			jp.add(searchcbo);
+			jp.add(button1);
+			//设置布局管理器
+			this.setLayout(new BorderLayout());
+			//将jp添加到面板
+			this.add(jp,BorderLayout.NORTH);
+			//在vector2中添加元素
+			vector2.add("学号");
+			vector2.add("姓名");
+			vector2.add("密码");
+			vector2.add("学院");
+			vector2.add("专业");
+			vector2.add("年级");
+			//监听者对象注册给button1
+			button1.addActionListener(this);
+			this.setSize(500,500);
+		}
+		//处理监听到的事件
+		public void actionPerformed(ActionEvent e)
+		{
+			String numorname,searchf,sql;
+			//获得查询条件
+			numorname = searchcbo.getSelectedItem().toString();
+        searchf = searchfield.getText().trim();
+			{if(searchf.equals(""))
+				JOptionPane.showMessageDialog(null, "查询条件不能为空!", "查询", JOptionPane.WARNING_MESSAGE);	
+			else
+				if(numorname.equals(""))
+					JOptionPane.showMessageDialog(null, "查询条件不能为空!", "查询", JOptionPane.WARNING_MESSAGE);	
+				else
+					//调用方法connect
+					connect("searchuser"+"/"+searchf+"/"+numorname);
+			}
+		}
+		public void connect(String s){
+			Socket socket;
+			try{
+				//创建Socket类对象，指定端口号为4321
+				socket = new Socket(InetAddress.getByName(""), 1234);
+				//创建输出流对象
+				output = new PrintWriter(new BufferedOutputStream(socket.getOutputStream()));
+            input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+				//输出数据流
+				output.println(s);
+			output.flush();
+					try{
+						//读取输入流
+						while(!(message = input.readLine()).equals("end")){
+							String userinfor[];
+							//将从数据库端传输过来的字符串分割成数组
+							userinfor=message.split("/");
+							Vector vector3=new Vector();
+							//将数组元素的值添加到vector3
+							vector3.add(userinfor[1]);
+                    vector3.add(userinfor[2]);
+                    vector3.add(userinfor[3]);
+                    vector3.add(userinfor[4]);
+                    vector3.add(userinfor[5]);
+                    vector3.add(userinfor[6]);
+							//把vector3作为数据元素添加到vector1中
+							vector1.add( vector3);
+						}
+						//创建表格
+						table=new JTable(vector1,vector2);
+						//创建滚动面板
+						jspane=new JScrollPane(table);
+						//将滚动面板添加 到窗口
+						this.add(jspane,BorderLayout.CENTER);
+					}
+					catch(IOException e){
+						System.out.println("无法获得信息");
+					}
+				//关闭数据流和Socket对象
+				input.close();
+            output.close();
+            socket.close();
+			}
+			catch(EOFException eof){//捕获异常
+				System.out.println("服务器中断");
+			}
+			catch(IOException e){//捕获异常
+				e.printStackTrace();
+			}
+		}
+}
+
+
+package edu.nh.admin;//已校对
+import java.io.*;
+import java.net.*;
+import java.awt.event.*;
+import javax.swing.*;
+public class updatebook extends JPanel{
+	//变量标签、文本框和按钮
+		private JTextField number,bookname,publish,author,isbn,price;
+		private JLabel jnumber,jbookname,jpublish,jauthor,jisbn,jprice;
+		private JButton button1,button2;
+		//声明数据流对象
+		PrintStream output;
+		DataInputStream input;
+		//声明字符和字符串变量
+		String message="";
+		String bookinfor[];
+		//构造方法
+		public updatebook(){
+			//设置布局为null
+			this.setLayout(null);
+			jnumber=new JLabel("编号"); 
+			number=new JTextField();
+			jbookname=new JLabel("书名");
+			bookname=new JTextField();
+			jpublish=new JLabel("出版社");
+			publish=new JTextField();
+			jauthor=new JLabel("作者");
+			author=new JTextField();
+			jisbn=new JLabel("ISBN");
+			isbn=new JTextField();
+			jprice=new JLabel("价格");
+			price=new JTextField();
+			button1=new JButton("查询");
+			button2=new JButton("修改");
+			//设置标签\文本框和按钮的大小和位置
+			jnumber.setBounds(30,20,60,26);
+			jbookname.setBounds(30,100,60,26);
+			jpublish.setBounds(30,130,60,26);
+			jauthor.setBounds(30,160,60,26);
+			jisbn.setBounds(30,190,60,26);
+			jprice.setBounds(30,220,60,26);
+			number.setBounds(110,20,120,26);
+			bookname.setBounds(110,100,120,26);
+			publish.setBounds(110,130,120,26);
+			author.setBounds(110,160,120,26);
+			isbn.setBounds(110,190,120,26);
+			price.setBounds(110,220,120,26);
+			button1.setBounds(60, 60, 60, 30);
+			button2.setBounds(60,250,60,26);
+			//设置文本框的属性为不可编辑
+			bookname.setEnabled(false);
+			publish.setEnabled(false);
+			author.setEnabled(false);
+			isbn.setEnabled(false);
+			price.setEnabled(false);
+			//将标签与按扭添加到JPanel容器中
+			this.add(jnumber);
+			this.add(number);
+			this.add(button1);
+			this.add(jbookname);
+			this.add(bookname);
+			this.add(jpublish);
+			this.add(publish);
+			this.add(jauthor);
+			this.add(author);
+			this.add(jisbn);
+			this.add(isbn);
+			this.add(jprice);
+			this.add(price);
+			this.add(button2);
+			//监听者对象注册给button1
+			button1.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e)
+				{if(number.getText().toString().equals(""))
+					//如果编号为空，弹出提示消息对话框
+					JOptionPane.showMessageDialog(null, "编号不能为空!");	
+				else
+					//调用方法connect()
+					connect("search"+"/"+number.getText().toString());
+				}
+			});
+			//监听者对象注册给button2
+			button2.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e)
+				{if(number.getText().toString().equals(""))
+					JOptionPane.showMessageDialog(null, "编号不能为空!");	
+				else
+					if(bookname.getText().toString().equals(""))
+						JOptionPane.showMessageDialog(null, "书名不能为空!");	
+					else
+						if(publish.getText().toString().equals(""))
+							JOptionPane.showMessageDialog(null, "出版社不能为空!");	
+						else
+							if(author.getText().toString().equals(""))
+								JOptionPane.showMessageDialog(null, "作者不能为空!");	
+							else
+								if(isbn.getText().toString().equals(""))
+									JOptionPane.showMessageDialog(null, "ISBN不能为空!");	
+								else
+									if(price.getText().toString().equals(""))
+										JOptionPane.showMessageDialog(null, "价格不能为空!");	
+									else
+										//调用方法connect()
+										connect("update"+"/"+number.getText().toString()+"/"+bookname.getText().toString()+"/"+publish.getText().toString()+"/"+author.getText().toString()+"/"+isbn.getText().toString()+"/"+price.getText().toString());
+				}
+			});
+			setSize(250,380);
+			this.setVisible(true);;
+		}
+		public void connect(String s){
+			Socket socket;
+			try{
+				//创建Socket类对象，指定端口号为4322
+				socket = new Socket(InetAddress.getByName(""), 1234);
+				//创建输入输出流对象
+				output=new PrintStream(new BufferedOutputStream(socket.getOutputStream()));
+			    input=new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+				//输出数据流
+				output.println(s);
+            output.flush();
+					try{
+						//读取来自服务器端的数据
+						message = (String)input.readLine();
+						//如果返回值为updateok，弹出对话框修改成功
+						if(message.equals("updateok"))
+						{
+					number.setEnabled(true);
+					bookname.setText("");
+					bookname.setText("");
+					publish.setText("");
+					author.setText("");
+					isbn.setText("");
+					price.setText("");
+					bookname.setEnabled(false);
+					publish.setEnabled(false);
+					isbn.setEnabled(false);
+					price.setEnabled(false);
+					JOptionPane.showMessageDialog(null, "修改成功！");	
+						}
+						//如果返回值为no，弹出对话框无记录信息
+						else if(message.equals("no"))
+						{
+							number.setEnabled(true);
+							bookname.setText("");
+							bookname.setText("");
+							publish.setText("");
+							author.setText("");
+							isbn.setText("");
+							price.setText("");
+							JOptionPane.showMessageDialog(null, "无记录信息!");	
+						}
+						//否则，根据返回的数据修改文本框中的值
+						else
+						{
+							//将从服务器端传输过来的字符串分割成数组，并显示到对应的文本框中
+							bookinfor=message.split("/");
+							number.setEnabled(false);
+							bookname.setText(bookinfor[2]);
+							publish.setText(bookinfor[3]);
+							author.setText(bookinfor[4]);
+							isbn.setText(bookinfor[5]);
+							price.setText(bookinfor[6]);
+							bookname.setEnabled(true);
+							publish.setEnabled(true);
+							author.setEnabled(true);
+							isbn.setEnabled(true);
+							price.setEnabled(true);
+						}
+					}
+					catch(IOException e){
+						//捕获异常
+						System.out.println("\n无法获得信息");
+					}
+				//关闭输入输出流对象和Socket对象
+				output.close();
+				input.close();
+				socket.close();
+			}
+			catch(EOFException eof){
+				//捕获异常
+				System.out.println("服务器中断");
+			}
+			catch(IOException e){
+				//捕获异常
+				e.printStackTrace();
+			}
+		}
+}
+
+
+package edu.nh.admin;//待定
+import java.io.*;
+import java.net.*;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+public class updateusers extends JPanel{
+	//声明文本框
+		private JTextField number,name,college,subject,grade;
+		//声明标签
+		private JLabel jnumber,jname,jpassword,jcollege,jsubject,jgrade;
+		//声明密码框
+		private JPasswordField password;
+		//声明按钮
+		private JButton button1,button2;
+		PrintStream output;
+		DataInputStream input;
+		String message="";
+		String bookinfor[];
+		//构造方法
+		public updateusers(){
+			//设置布局为null
+			this.setLayout(null);
+			jnumber=new JLabel("学号"); 
+			number=new JTextField();
+			jname=new JLabel("姓名");
+			name=new JTextField();
+			jpassword=new JLabel("密码");
+			password=new JPasswordField();
+			jcollege=new JLabel("学院");
+			college=new JTextField();
+			jsubject=new JLabel("专业");
+			subject=new JTextField();
+			jgrade=new JLabel("年级");
+			grade=new JTextField();
+			button1=new JButton("查询");
+			button2=new JButton("修改");
+			//设置标签\文本框和按钮的大小和位置
+			jnumber.setBounds(30,20,60,26);
+			jname.setBounds(30,100,60,26);
+			jpassword.setBounds(30,130,60,26);
+			jcollege.setBounds(30,160,60,26);
+			jsubject.setBounds(30,190,60,26);
+			jgrade.setBounds(30,220,60,26);
+			number.setBounds(110,20,120,26);
+			name.setBounds(110,100,120,26);
+			password.setBounds(110,130,120,26);
+			college.setBounds(110,160,120,26);
+			subject.setBounds(110,190,120,26);
+			grade.setBounds(110,220,120,26);
+			button1.setBounds(60, 60, 60, 30);
+			button2.setBounds(60,250,60,26);
+			//设置文本框的属性为不可编辑
+			name.setEnabled(false);
+			password.setEnabled(false);
+			college.setEnabled(false);
+			subject.setEnabled(false);
+			grade.setEnabled(false);
+			//将标签与按扭添加到JPanel容器中
+			this.add(jnumber);
+			this.add(number);
+			this.add(button1);
+			this.add(jname);
+			this.add(name);
+			this.add(jpassword);
+			this.add(password);
+			this.add(jcollege);
+			this.add(college);
+			this.add(jsubject);
+			this.add(subject);
+			this.add(jgrade);
+			this.add(grade);
+			this.add(button2);
+			//监听者对象注册给button1
+			button1.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e)
+				{if(number.getText().toString().equals(""))
+					JOptionPane.showMessageDialog(null, "学号不能为空", "修改", JOptionPane.WARNING_MESSAGE);	
+				else
+					connect("search"+"/"+number.getText().toString());
+				}
+			});
+			//监听者对象注册给button2
+			button2.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e)
+				{if(number.getText().toString().equals(""))
+					JOptionPane.showMessageDialog(null, "学号不能为空！", "修改", JOptionPane.WARNING_MESSAGE);	
+				else
+					if(name.getText().toString().equals(""))
+						JOptionPane.showMessageDialog(null, "姓名不能为空！", "修改", JOptionPane.WARNING_MESSAGE);	
+					else
+						if(password.getText().toString().equals(""))
+							JOptionPane.showMessageDialog(null, "密码不能为空！", "修改", JOptionPane.WARNING_MESSAGE);	
+						else
+							if(college.getText().toString().equals(""))
+								JOptionPane.showMessageDialog(null, "学院不能为空！", "修改", JOptionPane.WARNING_MESSAGE);	
+							else
+								if(subject.getText().toString().equals(""))
+									JOptionPane.showMessageDialog(null, "专业不能为空！", "修改", JOptionPane.WARNING_MESSAGE);	
+								else
+									if(grade.getText().toString().equals(""))
+										JOptionPane.showMessageDialog(null, "年级不能为空！", "修改", JOptionPane.WARNING_MESSAGE);	
+									else
+										//调用方法connect()                                                              
+										connect("add"+"/"+number.getText().toString()+"/"+name.getText().toString()+"/"+password.getText().toString()+"/"+college.getText().toString()+"/"+subject.getText().toString()+"/"+grade.getText().toString());
+				}
+			});
+			setSize(250,380);
+			this.setVisible(true);;
+		}
+		public void connect(String s){
+			Socket socket;
+			try{
+				//创建Socket类对象，指定端口号为4321
+				socket = new Socket(InetAddress.getByName(""), 1234);
+				//创建输入输出流对象
+				output=new PrintStream(new BufferedOutputStream(socket.getOutputStream()));
+				input=new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+				//输出数据流
+				output.println(s);
+				output.flush();
+					try{
+						//读取来自服务器端的数据
+						message=(String)input.readLine();
+						//如果返回值为updateok，弹出对话框修改成功
+						if(message.equals("updateok"))
+						{
+							number.setEnabled(true);
+							number.setText("");
+							name.setText("");
+							password.setText("");
+							college.setText("");
+							subject.setText("");
+							grade.setText("");
+							name.setEnabled(false);
+							password.setEnabled(false);
+							college.setEnabled(false);
+							subject.setEnabled(false);
+							grade.setEnabled(false);
+							JOptionPane.showMessageDialog(null, "修改成功！", "修改成功", JOptionPane.INFORMATION_MESSAGE);	
+						}
+						//如果返回值为no，弹出对话框无记录信息
+						else if(message.equals("no"))
+						{
+							number.setEnabled(true);
+                            number.setText("");
+                            name.setText("");
+                            password.setText("");
+                            college.setText("");
+                            subject.setText("");
+                            grade.setText("");
+                            JOptionPane.showMessageDialog(null, "无记录信息", "无记录信息", JOptionPane.INFORMATION_MESSAGE);
+						}
+						//否则，根据返回的数据修改文本框中的值
+						else
+						{
+							bookinfor=message.split("/");
+							number.setEnabled(false);
+							name.setText(bookinfor[2]);
+							password.setText(bookinfor[3]);
+							college.setText(bookinfor[4]);
+							subject.setText(bookinfor[5]);
+							grade.setText(bookinfor[6]);
+							name.setEnabled(true);
+							password.setEnabled(true);
+							college.setEnabled(true);
+							subject.setEnabled(true);
+							grade.setEnabled(true);
+						}
+					}
+					catch(IOException e){
+						System.out.println("\n无法获得信息");
+					}
+				//关闭输入输出数据流和Socket对象
+				output.close();
+				input.close();
+				socket.close();
+			}
+			catch(EOFException eof){//捕获异常
+				System.out.println("服务器中断");
+			}
+			catch(IOException e){//捕获异常
+				e.printStackTrace();
+			}
+		}
+}
+
+
+package edu.nh.login;//以校对
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.sql.*;
+import javax.swing.*;
+
+import edu.nh.user.bookmain_user;
+import edu.nh.utils.jdbcfile;
+import edu.nh.admin.bookmain;
+
+@SuppressWarnings("serial")
+public class Login extends JFrame {
+	// 声明标签、按钮、文本框和密码框
+	private JLabel JLb1;
+	private JLabel JLb2;
+	private JLabel JLb3;
+	private JButton Ok_btn;
+	private JButton Cancel_btn;
+	private JTextField jtflduser;
+	private JPasswordField jtpwdfld;
+	private JComboBox choose;
+	// 声明窗口
+	private JFrame frame;
+	// 声明数据流对象
+	PrintStream output;
+	DataInputStream input;
+	// 声明字符串变量
+	String message = "";
+	String str1;
+	String str2;
+	String sqlStr;
+
+	// 构造方法
+	@SuppressWarnings({})
+	public Login() {
+		super("广东南华工商职业学院图书管理系统");
+		 //设置布局管理器为3行1列的网格布局管理器
+		setLayout(new GridLayout(3,1));
+	    //创建3个panel
+	    JPanel p1 =new JPanel();
+	    JPanel p2 =new JPanel();
+	    JPanel p3 =new JPanel();
+	    JPanel p4 =new JPanel();
+		JLb1 = new JLabel("账   号");
+		JLb2 = new JLabel("密   码");
+		JLb3 = new JLabel("登录人");
+		jtflduser = new JTextField(20);
+		jtpwdfld = new JPasswordField(20);
+		choose = new JComboBox();
+		choose.addItem("管理员");
+		choose.addItem("读者");
+		Ok_btn = new JButton("确定");
+		Cancel_btn = new JButton("取消");
+		  //把组件添加到对应的面板
+	    p1.add(JLb1);
+	    p1.add(jtflduser);
+	    p2.add(JLb2);
+	    p2.add(jtpwdfld);
+	    p3.add(JLb3);
+	    p3.add(choose);
+	    p4.add(Ok_btn);
+	    p4.add(Cancel_btn);
+	    //把面板添加到窗体
+	    add(p1);
+	    add(p2);
+	    add(p3);
+	    add(p4);
+		pack();
+	    setSize(300, 230);
+		setVisible(true);
+		
+		// 为按钮增加事件监听者
+		Ok_btn.addActionListener(new ActionHandler());
+	    Cancel_btn.addActionListener(new ActionHandler());
+	}
+
+	/**
+	 * 实现ActionListener监听，激活组件响应
+	 */
+	class ActionHandler implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			
+			Object obj = e.getSource();
+			// 获得文本框和密码框的数据
+			str1 = jtflduser.getText().trim();
+			str2 = new String(jtpwdfld.getPassword()).trim();
+			try {
+				// 点击确定按钮
+				if (obj.equals(Ok_btn)) {
+					if (str1.equals("")) {
+						JOptionPane.showMessageDialog(frame, "账号不能为空！");
+						return;
+					}
+					// 创建数据库连接
+					if (choose.getSelectedItem().equals("管理员")) {
+						// 产生登录sql语句
+						sqlStr = "select * from admin where a_number='" + str1 + "' and a_password='" + str2 + "'";
+						ResultSet result=jdbcfile.Query(sqlStr);
+						if (result.next()) {
+							// 打开图书管理主页面
+							bookmain bookmain1 = new bookmain();
+								// 关闭登录窗口
+							dispose();
+							}  
+							 else {
+							JOptionPane.showMessageDialog(null, "账号或密码错误");
+						}
+					} else {
+						// 产生登录sql语句
+						sqlStr = "select * from user where u_number='" + str1 + "' and u_password='" + str2 + "'";
+						ResultSet result=jdbcfile.Query(sqlStr);
+						if (result.next()) {
+							// 打开用户管理主页面
+							bookmain_user bookmain1 = new bookmain_user();
+							// 关闭登录窗口
+							dispose();
+						} else {
+							JOptionPane.showMessageDialog(null, "账号或密码错误");
+						}
+					}
+
+				} else if (obj.equals(Cancel_btn)) {
+					// 点击取消按钮
+					jtflduser.setText("");
+					jtpwdfld.setText("");
+				}
+			} catch (Exception s) {
+				// 捕获异常
+				s.printStackTrace();
+			}
+		}
+	}
+
+	
+
+	public static void main(String args[]) {
+		Login l = new Login();
+		l.setVisible(true);
+		l.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				System.exit(0);
+			}
+		});
+	}
+}
+
+
+package edu.nh.server;//已校对
+
+import java.io.*;
+import java.net.*;
+import java.sql.ResultSet;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import edu.nh.utils.jdbcfile;
+
+public class adminbookserver extends JFrame {
+    private JTextArea display;
+    String message = "";
+
+    public adminbookserver() {
+        super("bookserver");
+        Container c = getContentPane();
+        display = new JTextArea();
+        c.add(new JScrollPane(display), BorderLayout.CENTER);
+        setSize(300, 150);
+        this.setVisible(true);
+    }
+
+    public void connect() {
+        ServerSocket server = null;
+        Socket socket;
+        jdbcfile conn = null;
+        try {
+            server = new ServerSocket(1234);
+            display.setText("");
+            conn = new jdbcfile();
+            while (true) {
+                display.append("等待客户端请求!\n");
+                socket = server.accept();
+                display.append("连接来自" + socket.getInetAddress().getHostName() + "\n");
+                display.append("主机IP地址为：" + socket.getInetAddress().getHostAddress() + "\n");
+                IOThread iot = new IOThread(socket, conn);
+                iot.start();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+                server.close();
+            } catch (Exception e) {
+                System.out.print("关闭监听出错:" + e.getMessage());
+            }
+        }
+    }
+
+    public class IOThread extends Thread {
+        Socket s;
+        String bookinfor[];
+        PrintWriter output;
+        BufferedReader input;
+        jdbcfile conn;
+        String turn, bnumber, bname, bpublish, bauthor, bisbn;
+        Float bprice;
+        int bstock;
+
+        public IOThread(Socket s, jdbcfile conn) {
+            this.s = s;
+            this.conn = conn;
+        }
+
+        public void run() {
+            int m = 0;
+            try {
+                output = new PrintWriter(new OutputStreamWriter(s.getOutputStream()));
+                input = new BufferedReader(new InputStreamReader(s.getInputStream()));
+                if ((message = input.readLine()) != null) {
+                    display.append("\n" + message);
+                    bookinfor = message.split("/");
+                    if (bookinfor[0].equals("add")) {
+                    	String sql1 = "insert into Book(b_number, bookname, publish, author, isbn, price, stock_number) values ('" + bookinfor[1] + "','" + bookinfor[2] + "','" + bookinfor[3] + "','" + bookinfor[4] + "','" + bookinfor[5] + "','" + bookinfor[6] + "','" + bookinfor[7] + "')";
+                            m = conn.insert(sql1);
+                            if (m == 1)
+                            sendData("addok");
+                    } else if (bookinfor[0].equals("search")) {
+                        String sql = "select * from bookinfo where b_number='" + bookinfor[1] + "'";
+                        ResultSet resultset = conn.Query(sql);
+                        if (resultset.next()) {
+                            bnumber = resultset.getString("b_number");
+                            bname = resultset.getString("bookname");
+                            bpublish = resultset.getString("publish");
+                            bauthor = resultset.getString("author");
+                            bisbn = resultset.getString("isbn");
+                            bprice = resultset.getFloat("price");
+                            bstock = resultset.getInt("stock_number");
+                            turn = bnumber + "/" + bname + "/" + bpublish + "/" + bauthor + "/" + bisbn + "/" + bprice
+                                    + "/" + bstock;
+                            sendData("success" + "/" + turn);
+                        } else {
+                            sendData("no");
+                        }
+                    } else if (bookinfor[0].equals("del")) {
+                        String sql1 = "delete from bookinfo where b_number='" + bookinfor[1] + "'";
+                        m = conn.delete(sql1);
+                        if (m == 1)
+                            sendData("delok");
+                    } else if (bookinfor[0].equals("update")) {
+                        String sql1 = "update Book set bookname='" + bookinfor[2] + "', publish='" + bookinfor[3]+ "', author='" + bookinfor[4] + "', isbn='" + bookinfor[5] + "', price='"+ bookinfor[6] + "' where b_number='" + bookinfor[1] + "'";
+                        m = conn.update(sql1);
+                        if (m == 1)
+                            sendData("updateok");
+                    } else if (bookinfor[0].equals("searchbook")) {
+                        String sql4;
+                        if (bookinfor[2].equals("按编号查询")) {
+                            sql4 = "select * from Book where b_number='" + bookinfor[1] + "'";
+                        } else {
+                            sql4 = "select * from Book where bookname='" + bookinfor[1] + "'";
+                        }
+                        ResultSet resultset4 = conn.Query(sql4);
+                        while (resultset4.next()) {
+                            bnumber = resultset4.getString("b_number");
+                            bname = resultset4.getString("bookname");
+                            bpublish = resultset4.getString("publish");
+                            bauthor = resultset4.getString("author");
+                            bisbn = resultset4.getString("isbn");
+                            bprice = resultset4.getFloat("price");
+                            bstock = resultset4.getInt("stock_number");
+                            turn = bnumber + "/" + bname + "/" + bpublish + "/" + bauthor + "/" + bisbn + "/" + bprice
+                                    + "/" + bstock;
+                            sendData("searchsuccess" + "/" + turn);
+                        }
+                        sendData("end");
+                    }
+                }
+            } catch (EOFException eof) {
+                System.out.println("客户端连接中断");
+            } catch (IOException e) {
+                display.append("\n数据错误");
+            } catch (Exception e) {
+                display.append("\n" + e.getMessage());
+                e.printStackTrace();
+            } finally {
+                display.append("\n关闭连接");
+                try {
+                    output.close();
+                    input.close();
+                    s.close();
+                } catch (IOException e) {
+                    display.append("\n关闭连接出错" + e.getMessage());
+                }
+            }
+        }
+
+        public void sendData(String s) {
+            try {
+                message = s;
+                output.println(message);
+                output.flush();
+            } catch (Exception e) {
+                display.append("\n数据传输错误");
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        adminbookserver app = new adminbookserver();
+        app.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                System.exit(0);
+            }
+        });
+        app.connect();
+    }
+}
+
+package edu.nh.server;
+import java.io.*;
+import java.net.*;
+import java.sql.ResultSet;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import edu.nh.utils.jdbcfile;
+public class adminuserserver extends JFrame{
+	//声明文本框用于在服务器端显示连接的信息
+		private JTextArea display;
+		String message="";
+		//构造方法
+		public adminuserserver(){
+			super("userserver");
+			//设置ContentPane容器对象
+			Container c=getContentPane();
+			display=new JTextArea();
+			//向窗口中添加对象
+			c.add(new JScrollPane(display),BorderLayout.CENTER);
+			setSize(300,150);
+			this.setVisible(true);
+		}
+		//定义方法connect()
+		public void connect(){
+			//声明ServerSocket和Socket对象
+			ServerSocket server=null;
+			Socket socket;
+			//声明数据库连接对象
+			jdbcfile conn=null;
+			try{
+				//创建ServerSocket对象，指定端口4321
+				server = new ServerSocket(1234);
+				display.setText("");
+				conn=new jdbcfile();
+				while(true){
+					display.append("等待客户端请求!\n");
+					//通过ServerSocket监听来自客户端的请求
+					socket=server.accept();
+					//在文本框中显示连接信息
+					display.append("连接"+"来自"+socket.getInetAddress().getHostName()+"\n");
+					display.append("主机IP地址为："+socket.getInetAddress().getHostAddress()+"\n");
+					//创建IOThread类对象
+					IOThread iot=new IOThread(socket,conn);
+					//启动线程
+					iot.start();
+				}
+			}
+			catch(Exception e){//捕获异常
+				e.printStackTrace();
+			}finally{
+				try{
+					//关闭数据库连接和ServerSocket对象
+					conn.close();
+                server.close();
+				}catch(Exception e){//捕获异常
+					System.out.print("关闭监听出错:"+e.getMessage());
+				}
+			}
+		}
+		//Thread类的子类
+		public class IOThread extends Thread{
+			//声明Socket对象
+			Socket s;
+			//声明字符串数组
+			String userinfor[];
+			//声明输入输出流对象
+			PrintWriter output;
+			BufferedReader input;
+			//声明数据库连接对象
+			jdbcfile conn;
+			String turn,unumber,uname,upassword,ucollege,usubject,ugrade;
+			//构造方法
+			public IOThread(Socket s,jdbcfile conn){
+				this.s=s;
+				this.conn=conn;
+			}
+			//方法run()
+			public void run(){
+				int m=0;
+				try{
+					//输入输出流
+					output = new PrintWriter(new OutputStreamWriter(s.getOutputStream()));
+                input = new BufferedReader(new InputStreamReader(s.getInputStream()));
+					//读取来自客户端的数据流
+					if((message=input.readLine())!=null){
+						//显示读取的数据流信息
+						display.append("\n"+message);
+						//将读取的数据流信息转换成数组
+						userinfor=message.split("/");
+						//如果读取的第一段信息为"add"，则把读取的数据插入到数据库
+						if(userinfor[0].equals("add"))
+						{
+							String sql1 = "insert into users(u_number,u_name,u_password,college,subject,grade)values('"+userinfor[1]+"','"+userinfor[2]+"','"+userinfor[3]+"','"+userinfor[4]+"','"+userinfor[5]+"','"+userinfor[6]+"')";
+                        m = conn.insert(sql1);
+							//如果插入成功，向客户端输出"addok"
+							if(m==1) 
+							sendData("addok");
+						}
+						//如果读取的第一段信息为"search"，则到数据库中查询符合条件的数据信息
+						else if(userinfor[0].equals("search"))
+						{
+							ResultSet resultset =conn.Query("SELECT * FROM users WHERE u_number ='"+userinfor[1]+"'");
+							if(resultset.next()){
+								unumber=resultset.getString("u_number");
+								uname=resultset.getString("u_name");
+								upassword=resultset.getString("u_password");
+								ucollege=resultset.getString("college");
+								usubject=resultset.getString("subject");
+								ugrade=resultset.getString("grade");
+								turn=unumber+"/"+uname+"/"+upassword+"/"+ucollege+"/"+usubject+"/"+ugrade;
+								//把查询的信息输出到客户端
+								sendData("success"+"/"+turn);
+							}
+							else
+							{
+								//如果没有查询到符合条件的信息，则向客户端输出“no”
+								sendData("no");
+							}
+						}
+						//如果读取的第一段信息为"del"，则删除对应数据库中数据信息
+						else if(userinfor[0].equals("del"))
+						{
+							String sql1 = "DELETE FROM users where u_number ='"+userinfor[1]+"'";
+                        m = conn.delete(sql1);
+							//如果删除成功，则向客户端输出“delok”
+							if(m==1)
+							sendData("delok");
+						}
+						//如果读取的第一段信息为"update"，则修改对应数据库中数据信息
+						else if(userinfor[0].equals("update"))
+						{
+							String sql1 = "UPDATE table_name SET u_name ='"+userinfor[2]+"', u_password ='"+userinfor[3]+"', college ='"+userinfor[4]+"', subject ='"+userinfor[5]+"', grade ='"+userinfor[6]+"' WHERE u_number = '"+userinfor[1]+"'";
+                        m = conn.update(sql1);
+							//如果修改成功，则向客户端输出“updateok”
+						    if(m==1)
+						    sendData("updateok");
+						}
+						//如果读取的第一段信息为"searchuser"，则到数据库中查询符合条件的数据信息
+						else if(userinfor[0].equals("searchuser"))
+						{
+							//产生SQL查询语句
+							String sql4;
+							if(userinfor[2].equals("按学号查询")){
+								sql4 = "SELECT * FROM table_name WHERE u_number ='"+userinfor[1]+"'";
+							}
+							else
+							{
+								sql4 = "SELECT * FROM table_name WHERE u_name ='"+userinfor[1]+"'";
+							}
+							//查询结果
+							ResultSet resultset4=conn.Query(sql4);
+							while(resultset4.next()){
+								//将查询的结果输出到客户端
+								unumber=resultset4.getString("u_number");
+								uname=resultset4.getString("u_name");
+								upassword=resultset4.getString("u_password");
+								ucollege=resultset4.getString("college");
+								usubject=resultset4.getString("subject");
+								ugrade=resultset4.getString("grade");
+								turn=unumber+"/"+uname+"/"+upassword+"/"+ucollege+"/"+usubject+"/"+ugrade;
+								sendData("searchsuccess"+"/"+turn);
+							}
+							//输出“end”到客户端，表明查询结果输出完毕
+							sendData("end");
+						}
+					}
+					}
+					catch(EOFException eof){//捕获异常
+						System.out.println("客户端连接中断");
+					}
+					catch(IOException e){//捕获异常
+						display.append("\n数据错误");
+					}catch(Exception e){//捕获异常
+						display.append("\n"+e.getMessage());
+						e.printStackTrace();
+					}
+					finally{
+						display.append("\n关闭连接");
+						//关闭数据流和Socket对象
+						try{
+							output.close();
+							input.close();
+							s.close();
+						}catch(IOException e){display.append("\n关闭连接出错"+e.getMessage());}
+					}
+				
+			}
+			public void sendData(String s){
+				try{
+					//向客户端输出数据流
+					message=s;
+					output.println(s);
+					output.flush();
+				}
+				catch(Exception e){//捕获异常
+					display.append("\n数据传输错误");
+				}
+			}
+		}
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		adminuserserver app=new adminuserserver();
+		app.addWindowListener(new WindowAdapter(){
+			public void windowClosing(WindowEvent e)
+			{System.exit(0);}
+		});
+		app.connect();
+	}
+}
+
+
+package edu.nh.server;//已校对
+
+import java.io.*;
+import java.net.*;
+import java.sql.ResultSet;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.util.*;
+import java.text.*;
+import edu.nh.utils.jdbcfile;
+
+public class lendbookserver extends JFrame {
+    // 声明文本框用于在服务器端显示连接的信息
+    private JTextArea display;
+    String message = "";
+
+    // 构造方法
+    public lendbookserver() {
+        super("lendbookserver");
+        // 设置ContentPane容器对象
+        Container c = getContentPane();
+        display = new JTextArea();
+        // 向窗口中添加对象
+        c.add(new JScrollPane(display), BorderLayout.CENTER);
+        setSize(300, 150);
+        this.setVisible(true);
+    }
+
+    // 定义方法connect()
+    public void connect() {
+        // 声明ServerSocket和Socket对象
+        ServerSocket server = null;;
+        Socket socket;
+        // 声明数据库连接对象
+        jdbcfile conn = null;
+        try {
+            // 创建ServerSocket对象，指定端口4323
+            server = new ServerSocket(1234);
+            display.setText("");
+            conn = new jdbcfile();
+            while (true) {
+                display.append("等待客户端请求!\n");
+                // 通过ServerSocket监听来自客户端的请求
+                socket = server.accept();
+                // 在文本框中显示连接信息
+                display.append("连接" + "来自" + socket.getInetAddress().getHostName() + "\n");
+                display.append("主机IP地址为：" + socket.getInetAddress().getHostAddress() + "\n");
+                // 创建IOThread类对象
+                IOThread iot = new IOThread(socket, conn);
+                // 启动线程
+                iot.start();
+            }
+        } catch (Exception e) {// 捕获异常
+            e.printStackTrace();
+        } finally {
+            try {
+                // 关闭数据库连接和ServerSocket对象
+                conn.close();
+                server.close();
+            } catch (Exception e) {// 捕获异常
+                System.out.print("关闭监听出错:" + e.getMessage());
+            }
+        }
+    }
+
+    // Thread类的子类
+    public class IOThread extends Thread {
+        // 声明Socket对象
+        Socket s;
+        // 声明字符串数组
+        String bookinfor[];
+        // 声明输入输出流对象
+        PrintWriter output;
+        BufferedReader input;
+        // 声明数据库连接对象
+        jdbcfile conn;
+        String turn, bnumber, unumber, lendtime, returntime1, returntime2, breturn,bookname,publish,isbn,author;
+        int stocknumber;
+        float price;
+
+        // 构造方法
+        public IOThread(Socket s, jdbcfile conn) {
+            this.s = s;
+            this.conn = conn;
+        }
+
+        // 方法run()
+        public void run() {
+            int m = 0, n = 0;
+            // 日期时间
+            Calendar c1 = Calendar.getInstance();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            String t1 = format.format(c1.getTime());
+            c1.add(Calendar.MONTH, +1);
+            String t2 = format.format(c1.getTime());
+            try {
+                // 输入输出流
+                output = new PrintWriter(new OutputStreamWriter(s.getOutputStream()));
+                input = new BufferedReader(new InputStreamReader(s.getInputStream()));
+                // 读取来自客户端的数据流
+                if ((message = input.readLine()) != null) {
+                    // 显示读取的数据流信息
+                    display.append("\n" + message);
+                    // 将读取的数据流信息转换成数组
+                    bookinfor = message.split("/");
+                    // 如果读取的第一段信息为"lend"，则执行借书操作
+                    if (bookinfor[0].equals("lend")) {
+                        // 查询图书是否存在？
+                    	ResultSet resultset1 =conn.Query("SELECT * FROM book WHERE b_namber = '" + bookinfor[1] + "' and stock-number>0");
+                        if (resultset1.next()) {
+                            // 查询读者是否存在?
+                        	ResultSet resultset2 =conn.Query("SELECT u_number from users where u_namber = '" + bookinfor[2] + "'");
+                        	ResultSet resultsets =conn.Query("SELECT a_number from users where a_namber = '" + bookinfor[2] + "'");
+                            if (resultset2.next()) {
+                                // 是否是否已借书未还？
+                            	ResultSet resultset3 =conn.Query("SELECT u_number from lendbook where b_namber = '" + bookinfor[1] + "'and aoru_number='"+bookinfor[2]+"'and breturn='0'");
+                                if (resultset3.next()) {
+                                    sendData("noreturn");
+                                } else {
+                                    // 借书操作
+                                    String sql = "update Book set stock_number-1 where b_number='"+bookinfor[1]+"'";
+                                    m = conn.update(sql);
+                                    // 更新图书表中的数量
+                                    String sql1= "insert into lendbook(b_number,aoru_number,breturn,lendtime,returntime1) values('"+bookinfor[1]+"','"+bookinfor[2]+"','0','"+t1+"','"+t2+"')";
+                                    n = conn.insert(sql1);
+                                    // 如果借阅成功返回“lendok”
+                                    if (n == 1 && m == 1) {
+                                        sendData("lendok");
+                                    } else {
+                                        sendData("lendno");
+                                    }
+                                }
+                            } else {
+                                // 如果读者不存在，返回“nouser”
+                                sendData("nouser");
+                            }
+                        } else {
+                            // 如果图书不存在，返回“nobook”
+                            sendData("nobook");
+                        }
+                    }
+                    // 如果读取的第一段信息为"return"，则执行还书操作
+                    else if (bookinfor[0].equals("return")) {
+                        // 查询数据库中的数据信息
+                    	ResultSet resultset3 =conn.Query("SELECT from lendbook where b_namber = '" + bookinfor[1] + "'and aoru_number='"+bookinfor[2]+"'and breturn='0'");
+						if(resultset3.next()){
+							String sql2 = "update lendbook set breturn='1',returntime2'"+t1+"' where b_number='"+bookinfor[1]+"' and aoru_number='"+bookinfor[2]+"' and breturn='0'";
+							String sql3 = "update book set stock_number=stock_number+1 where b_number='"+bookinfor[1]+"'";
+							//更新数据
+							m=conn.update(sql2);
+							n=conn.update(sql3);
+							//如果还书成功，返回“returnok”
+							if(m==1&&n==1)
+								sendData("returnok");
+						}
+						else{
+							//如果结束记录中没有该书的借阅记录，返回"nolendbook"
+							sendData("nolendbook");
+						}
+					}
+					//如果读取的第一段信息为"search"，则到数据库中查询符合条件的数据信息
+					else if(bookinfor[0].equals("search"))
+					{
+						//产生SQL查询语句
+						String sql4;
+						if(bookinfor[2].equals("按图书查询")){
+							sql4="select * from Lendbook where b_number='"+bookinfor[1]+"'";
+						}
+						else
+						{
+							sql4="select * from Lendbook where aoru_number='"+bookinfor[1]+"'";
+						}
+						//查询数据库中的数据
+						ResultSet resultset4=conn.Query(sql4);
+						while(resultset4.next()){
+							//将查询的结果输出到客户端
+							bnumber=resultset4.getString("b_number");
+							unumber=resultset4.getString("u_number");
+							lendtime=resultset4.getString("lendtime");
+							returntime1=resultset4.getString("returntime1");
+							returntime2=resultset4.getString("returntime2");
+							breturn=resultset4.getString("breturn");
+							turn=bnumber+"/"+unumber+"/"+lendtime+"/"+returntime1+"/"+returntime2+"/"+breturn;
+							sendData("success"+"/"+turn);
+						}
+						//输出“end”到客户端，表明查询结果输出完毕
+						sendData("end");
+					}
+				}
+				}
+				catch(EOFException eof){//捕获异常
+					System.out.println("客户端连接中断");
+				}
+				catch(IOException e){//捕获异常
+					display.append("\n数据错误");
+				}
+				catch(Exception e){//捕获异常
+					display.append("\n"+e.getMessage());
+					e.printStackTrace();
+					try {
+						//如果出现错误将发起回滚操作
+						//conn.rollback();
+					}
+					catch(Exception ex){
+						ex.printStackTrace();
+					}
+				}
+				finally{
+					display.append("\n关闭连接");
+					//关闭数据流和Socket对象
+					try{
+						output.close();
+						input.close();
+						s.close();
+					}
+					catch(IOException e){//捕获异常
+						display.append("\n关闭连接出错"+e.getMessage());}
+				}
+		}
+		public void sendData(String s){
+			try{
+				//向客户端输出数据流
+				message=s;
+				output.println(s);
+				output.flush();
+			}
+			catch(Exception e){//捕获异常
+				display.append("\n数据传输错误");
+			}
+		}
+	}
+public static void main(String[] args) {
+	// TODO Auto-generated method stub
+	lendbookserver app=new lendbookserver();
+	app.addWindowListener(new WindowAdapter(){
+		public void windowClosing(WindowEvent e)
+		{System.exit(0);}
+	});
+	app.connect();
+}
+
+}
+
+package edu.nh.user;
+import java.awt.*;
+import java.awt.event.*;
+
+import javax.swing.*;
+
+import edu.nh.admin.searchlend;
+public class bookmain_user extends JFrame{
+	//声明面板容器和标签
+		private JPanel jp1=new JPanel();
+		private JLabel label1;
+	  BorderLayout borderLayout1 = new BorderLayout();
+	  //创建菜单栏
+	 JMenuBar jMenuBar1 = new JMenuBar();
+	  //创建菜单
+	 JMenu jMenu1 = new JMenu();
+	  //创建菜单选项
+	JMenuItem jMenuItem1 = new JMenuItem();
+	JMenuItem jMenuItem2 = new JMenuItem();
+	JMenuItem jMenuItem3 = new JMenuItem();
+	JMenuItem jMenuItem4 = new JMenuItem();
+        JMenu jMenu2 = new JMenu();
+	  //方法
+	  public bookmain_user(){
+		  //设置窗口容器的布局管理器
+		  this.getContentPane().setLayout(borderLayout1);
+		  //设置窗口的大小和标题
+		  this.setSize(new Dimension(300, 200));
+		  this.setTitle("图书借阅系统");
+		  label1=new JLabel("南华图书管理信息系统");
+		  //加入菜单栏
+		  this.setJMenuBar (jMenuBar1);
+		  //设置菜单和菜单项的名称
+	    	jMenu1.setText("借阅管理"); 
+	    	jMenuItem1.setText("借阅图书");
+	    	jMenuItem2.setText("归还图书");
+	    	jMenuItem3.setText("借阅查询");
+	    	jMenuItem4.setText("退出系统");
+	    	jMenu2.setText("退出");
+	    	//菜单栏里的菜单
+			jMenuBar1.add(jMenu1);
+	    	jMenuBar1.add(jMenu2);
+	    	//文件菜单里的菜单项
+	    	jMenu1.add(jMenuItem1);
+	   		jMenu1.add(jMenuItem2);
+	    	jMenu1.add(jMenuItem3);
+	    	jMenu2.add(jMenuItem4);
+	    	//监听者对象注册给jMenuItem1
+	    	jMenuItem1.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e)
+				{
+					//将借阅图书管理面板添加到jp1中，并显示出来
+					jp1.add(new lendbook());
+				    CardLayout cardLayout = (CardLayout) jp1.getLayout();
+				    cardLayout.show(jp1, "借阅图书");
+				}
+			});
+	    	//监听者对象注册给jMenuItem2
+	    	jMenuItem2.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e)
+				{
+					//将归还图书管理面板添加到jp1中，并显示出来
+					jp1.add(new returnbook());
+				    CardLayout cardLayout = (CardLayout) jp1.getLayout();
+				    cardLayout.show(jp1, "归还图书");
+				}
+			});
+	    	//监听者对象注册给jMenuItem3
+	    	jMenuItem3.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e)
+				{
+					//将借阅查询管理面板添加到jp1中，并显示出来
+					jp1.add(new searchlend());
+				    CardLayout cardLayout = (CardLayout) jp1.getLayout();
+				    cardLayout.show(jp1, "查询图书");
+				}
+			});
+	    	jMenuItem4.addActionListener(new java.awt.event.ActionListener(){
+	      	public void actionPerformed(ActionEvent e) {
+	             	System.exit(0);
+	      }
+	    });
+	    	   	
+	    	//设置JPanel的布局管理器
+			CardLayout cardlayout=new CardLayout();
+			jp1.setLayout(cardlayout);
+			jp1.add(label1,"图书管理系统");
+			this.add(jp1,BorderLayout.CENTER);
+			setSize(300,450);
+	   		this.setVisible(true);
+	  	}
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		bookmain_user ex=new bookmain_user ();
+	}
+}
+
+package edu.nh.user;
+import java.io.*;
+import java.net.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class lendbook extends JPanel {
+	//声明标签
+	private JTextField bnumber, unumber;
+	//声明文本框
+	private JLabel jbnumber, junumber;
+	//声明按钮
+	private JButton button1, button2;
+	//声明数据流对象
+	PrintStream output;
+	DataInputStream input;
+	//声明字符串变量
+	String message = "";
+
+	public lendbook() {
+		//设置布局为null
+		this.setLayout(null);
+		jbnumber = new JLabel("图书编号");
+		bnumber = new JTextField();
+		junumber = new JLabel("读者编号");
+		unumber = new JTextField();
+		button1 = new JButton("借阅");
+		button2 = new JButton("取消");
+		//设置标签的位置和大小
+		jbnumber.setBounds(30, 20, 60, 30);
+		junumber.setBounds(30, 70, 60, 26);
+		//设置文本框的位置和大小
+		bnumber.setBounds(110, 20, 120, 26);
+		unumber.setBounds(110, 70, 120, 26);
+		//设置按钮的位置和大小
+		button1.setBounds(30, 120, 60, 26);
+		button2.setBounds(110, 120, 60, 26);
+		//将标签、文本框和按钮添加到JPanel容器中
+		this.add(jbnumber);
+		this.add(bnumber);
+		this.add(junumber);
+		this.add(unumber);
+		this.add(button1);
+		this.add(button2);
+		//监听者对象注册给button1
+		button1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (bnumber.getText().toString().equals(""))
+					JOptionPane.showMessageDialog(null, "图书编号不能为空!");
+				else if (unumber.getText().toString().equals(""))
+					JOptionPane.showMessageDialog(null, "读者编号不能为空!");
+				else
+					//调用方法connect
+					connect("lend"+"/"+bnumber.getText().toString()+"/"+unumber.getText().toString());
+			}
+		});
+		//监听者对象注册给button2
+		button2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//清空文本框内容
+				bnumber.setText("");
+				unumber.setText("");
+			}
+		});
+		setSize(250, 300);
+		this.setVisible(true);
+	}
+
+	public void connect(String s) {
+		Socket socket;
+		try {
+			//创建Socket类对象，指定主机名和端口号
+			socket = new Socket(InetAddress.getByName(""), 1234);
+			//创建输入、输出流对象
+			output=new PrintStream(new BufferedOutputStream(socket.getOutputStream()));
+			input=new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+			//输出数据流
+			output.println(s);
+			output.flush();
+				try{
+					//读取输入流
+				message =(String) input.readLine();					
+				if(message.equals("lendok")){
+					//借阅成功对话框
+					JOptionPane.showMessageDialog(null, "借阅成功！");} 
+				else if(message.equals("lendno")){
+					//借阅失败对话框
+					JOptionPane.showMessageDialog(null, "借阅失败！");} 
+				else if(message.equals("nobook")){
+					//借阅失败对话框
+					JOptionPane.showMessageDialog(null, "此书不存在或被借完！");} 
+				else if(message.equals("nouser")){
+					//借阅失败对话框
+					JOptionPane.showMessageDialog(null, "此读者不存在！");} 
+				else if(message.equals("noreturn")){
+					//借阅失败对话框
+					JOptionPane.showMessageDialog(null, "您以借此书未还！");} 
+				}
+				catch(IOException e){//捕获异常
+					System.out.println("无法获得信息");
+				}
+			//关闭输入输出流对象和Socket对象
+			input.close();
+				output.close();
+				socket.close();
+		}
+		catch(EOFException eof){
+			//捕获异常
+			System.out.println("服务器中断");
+		}
+		catch(IOException e){
+			//捕获异常
+			e.printStackTrace();
+		}
+	}
+}
+
+
+package edu.nh.user;
+import java.io.*;
+import java.net.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class lendbook extends JPanel {
+	//声明标签
+	private JTextField bnumber, unumber;
+	//声明文本框
+	private JLabel jbnumber, junumber;
+	//声明按钮
+	private JButton button1, button2;
+	//声明数据流对象
+	PrintStream output;
+	DataInputStream input;
+	//声明字符串变量
+	String message = "";
+
+	public lendbook() {
+		//设置布局为null
+		this.setLayout(null);
+		jbnumber = new JLabel("图书编号");
+		bnumber = new JTextField();
+		junumber = new JLabel("读者编号");
+		unumber = new JTextField();
+		button1 = new JButton("借阅");
+		button2 = new JButton("取消");
+		//设置标签的位置和大小
+		jbnumber.setBounds(30, 20, 60, 30);
+		junumber.setBounds(30, 70, 60, 26);
+		//设置文本框的位置和大小
+		bnumber.setBounds(110, 20, 120, 26);
+		unumber.setBounds(110, 70, 120, 26);
+		//设置按钮的位置和大小
+		button1.setBounds(30, 120, 60, 26);
+		button2.setBounds(110, 120, 60, 26);
+		//将标签、文本框和按钮添加到JPanel容器中
+		this.add(jbnumber);
+		this.add(bnumber);
+		this.add(junumber);
+		this.add(unumber);
+		this.add(button1);
+		this.add(button2);
+		//监听者对象注册给button1
+		button1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (bnumber.getText().toString().equals(""))
+					JOptionPane.showMessageDialog(null, "图书编号不能为空!");
+				else if (unumber.getText().toString().equals(""))
+					JOptionPane.showMessageDialog(null, "读者编号不能为空!");
+				else
+					//调用方法connect
+					connect("lend"+"/"+bnumber.getText().toString()+"/"+unumber.getText().toString());
+			}
+		});
+		//监听者对象注册给button2
+		button2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//清空文本框内容
+				bnumber.setText("");
+				unumber.setText("");
+			}
+		});
+		setSize(250, 300);
+		this.setVisible(true);
+	}
+
+	public void connect(String s) {
+		Socket socket;
+		try {
+			//创建Socket类对象，指定主机名和端口号
+			socket = new Socket(InetAddress.getByName(""), 1234);
+			//创建输入、输出流对象
+			output=new PrintStream(new BufferedOutputStream(socket.getOutputStream()));
+			input=new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+			//输出数据流
+			output.println(s);
+			output.flush();
+				try{
+					//读取输入流
+				message =(String) input.readLine();					
+				if(message.equals("lendok")){
+					//借阅成功对话框
+					JOptionPane.showMessageDialog(null, "借阅成功！");} 
+				else if(message.equals("lendno")){
+					//借阅失败对话框
+					JOptionPane.showMessageDialog(null, "借阅失败！");} 
+				else if(message.equals("nobook")){
+					//借阅失败对话框
+					JOptionPane.showMessageDialog(null, "此书不存在或被借完！");} 
+				else if(message.equals("nouser")){
+					//借阅失败对话框
+					JOptionPane.showMessageDialog(null, "此读者不存在！");} 
+				else if(message.equals("noreturn")){
+					//借阅失败对话框
+					JOptionPane.showMessageDialog(null, "您以借此书未还！");} 
+				}
+				catch(IOException e){//捕获异常
+					System.out.println("无法获得信息");
+				}
+			//关闭输入输出流对象和Socket对象
+			input.close();
+				output.close();
+				socket.close();
+		}
+		catch(EOFException eof){
+			//捕获异常
+			System.out.println("服务器中断");
+		}
+		catch(IOException e){
+			//捕获异常
+			e.printStackTrace();
+		}
+	}
+}
+
+
+package edu.nh.user;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import javax.swing.*;
+import java.util.Vector;
+
+public class searchbook extends JPanel implements ActionListener {
+    // 声明文本框、标签、下拉菜单和按钮
+    private JTextField searchfield;
+    private JLabel searchlabel;
+    private JComboBox searchcbo;
+    private JButton button1;
+    // 声明Vector变量
+    private Vector<Vector<String>> vector1 = new Vector<Vector<String>>();
+    private Vector<String> vector2 = new Vector<String>();
+    // 声明滚动面板
+    private JScrollPane jspane;
+    private JPanel jp = new JPanel();
+    // 声明表格
+    private JTable table;
+    // 声明数据流对象
+    private PrintWriter output;
+    private BufferedReader input;
+    // 声明字符串变量
+    private String message = "";
+
+    // 构造方法
+    public searchbook() {
+        searchlabel = new JLabel("图书信息查询");
+        searchfield = new JTextField("请输入查询条件");
+        searchcbo = new JComboBox();
+        button1 = new JButton("查询");
+        searchcbo.addItem("按编号查询");
+        searchcbo.addItem("按书名查询");
+
+        // 设置JPanel的布局管理器
+        jp.setLayout(new FlowLayout());
+        // 将标签与按钮添加到JPanel容器中
+        jp.add(searchlabel);
+        jp.add(searchfield);
+        jp.add(button1);
+        jp.add(searchcbo);
+        jp.add(button1);
+        // 设置布局管理器
+        this.setLayout(new BorderLayout());
+        // 将jp添加到面板
+        this.add(jp, BorderLayout.NORTH);
+        // 在vector2中添加元素
+        vector2.add("编号");
+        vector2.add("书名");
+        vector2.add("出版社");
+        vector2.add("作者");
+        vector2.add("ISBN");
+        vector2.add("定价");
+        vector2.add("库存");
+        // button1注册监听者对象
+        button1.addActionListener(this);
+        this.setSize(500, 500);
+    }
+
+    // 处理监听到的事件
+    public void actionPerformed(ActionEvent e) {
+        String numorname, searchf, sql;
+        // 获得查询条件
+        numorname = searchcbo.getSelectedItem().toString();
+        searchf = searchfield.getText().trim();
+        if (searchf.equals("")) {
+            JOptionPane.showMessageDialog(null, "查询条件不能为空!", "查询", JOptionPane.WARNING_MESSAGE);
+        } else if (numorname.equals("")) {
+            JOptionPane.showMessageDialog(null, "查询条件不能为空!", "查询", JOptionPane.WARNING_MESSAGE);
+        } else {
+            // 调用方法connect
+            connect(searchf);
+        }
+    }
+
+    public void connect(String s) {
+        Socket socket;
+        try {
+            // 创建Socket类对象，指定主机名为"localhost"，端口号为4322
+            socket = new Socket("localhost", 4322);
+            // 创建输入流对象
+            input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            // 创建输出流对象
+            output = new PrintWriter(new BufferedOutputStream(socket.getOutputStream()));
+
+            // 输出数据流
+            output.println(s);
+            output.flush();
+
+            // 读取输入流
+            while ((message = input.readLine()) != null) {
+                String[] bookinfor = message.split("/");
+                Vector<String> vector3 = new Vector<String>();
+                // 将数组元素的值添加到vector3
+                for (String value : bookinfor) {
+                    vector3.add(value);
+                }
+                // 把vector3作为数据元素添加到vector1中
+                vector1.add(vector3);
+            }
+
+            // 创建表格
+            table = new JTable(vector1, vector2);
+            // 创建滚动面板
+            jspane = new JScrollPane(table);
+            // 将滚动面板添加到窗口
+            this.add(jspane, BorderLayout.CENTER);
+
+            // 关闭输入输出数据流和Socket对象
+            input.close();
+            output.close();
+            socket.close();
+        } catch (EOFException eof) { // 捕获异常
+            System.out.println("服务器中断");
+        } catch (IOException e) { // 捕获异常
+            e.printStackTrace();
+        }
+    }
+}
+
+package edu.nh.utils;//以校对
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+public class jdbcfile {
+	private static Connection conn;//创建Connection类型的引用
+	private static Statement stat;//创建Statement类型的引用
+	private static ResultSet rs;//创建ResultSet类型的引用
+	private static String driver="com.microsoft.sqlserver.jdbc.SQLServerDriver";
+	private static String url = "jdbc:sqlserver://localhost:1433/book_management?characterEncoding=utf8";
+	private static String dbUser = "sa";
+	private static String dbPwd = "123456";
+	public static Connection getConnection() {//获得Connection类型的对象
+		try {
+			Class.forName(driver); 
+			conn = DriverManager.getConnection(url,dbUser,dbPwd);
+			return conn;
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;	
+	}
+	public static Statement openStatement() {//获得Statement类型的对象
+		try {
+			stat = getConnection().createStatement();
+			return stat;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	public static int update(String sql) {//完成数据的更新操作，可以进行数据的增（insert）、删(delete)、改（update）
+		try {
+			return openStatement().executeUpdate(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	
+	public static int insert(String sql) {//完成数据的插入操作
+		try {
+			return openStatement().executeUpdate(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	
+	public static int delete(String sql) {//完成数据的删除操作
+		try {
+			return openStatement().executeUpdate(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+
+	public  static ResultSet Query(String sql) {//完成数据的查询操作，可以进行数据的查询select
+		try {
+			return openStatement().executeQuery(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	public static void close() {//释放各种资源
+		if(rs!=null) {
+			try {
+			rs.close();
+			} catch (SQLException e) {
+			e.printStackTrace();
+			}
+			}
+			if(stat!=null) {
+			try {
+			stat.close();
+			} catch (SQLException e) {
+			e.printStackTrace();
+			}
+			}
+			if(conn!=null) {
+			try {
+			conn.close();
+			} catch (SQLException e) {
+			e.printStackTrace();
+			}
+			}
+	}
+
+}
